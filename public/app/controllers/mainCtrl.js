@@ -56,7 +56,7 @@ angular.module('mainController', ['authServices'])
                 app.loading = false;
                 app.successMsg = 'User authenticated. Logging in...';
                 $timeout(function () {
-                    $location.path('/');
+                    $location.path('/settings');
                     app.logData = '';
                     app.successMsg = false;
                 }, 2000);
