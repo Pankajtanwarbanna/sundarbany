@@ -7,14 +7,18 @@ const router            = require('express').Router({
 
 const marketController    = require(constant.path.module + 'market/market.controller');
 
+const UserGuard         = Passport.authenticate(['admin', 'super-admin'], { session : false });
+
 /* market Routes */ 
 router.post(
     '/',
+    UserGuard,
     marketController.market
 );
 
 router.get(
     '/',
+    UserGuard,
     marketController.getAll
 );
 

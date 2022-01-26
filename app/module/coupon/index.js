@@ -7,20 +7,26 @@ const router            = require('express').Router({
 
 const couponController    = require(constant.path.module + 'coupon/coupon.controller');
 
+const SuperAdminGuard   = Passport.authenticate(['super-admin'], { session : false })
+const UserGuard         = Passport.authenticate(['admin', 'super-admin'], { session : false });
+
 /* coupon category Routes */ 
 router.post(
     '/category',
+    UserGuard,
     couponController.category
 );
 
 /* coupon Routes */ 
 router.post(
     '/',
+    UserGuard,
     couponController.coupon
 );
 
 router.get(
     '/',
+    UserGuard,
     couponController.getAll
 );
 
