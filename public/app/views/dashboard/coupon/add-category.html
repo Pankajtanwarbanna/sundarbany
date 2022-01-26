@@ -1,0 +1,48 @@
+<div class="dt-page__header">
+    <h1 class="dt-page__title">Add Coupon Category</h1>
+</div>
+
+<div class="row">
+    <!-- Grid Item -->
+    <div class="col-12">
+        <!-- Card -->
+        <div class="dt-card">
+            <!-- Card Body -->
+            <div class="dt-card__body">
+                <!-- Form -->
+                <form ng-submit="addCategory.addNewCategory(categoryData);" class="mb-6" ng-show="!addCategory.successMsg">
+                    <div class="form-row">
+                        <div class="col-sm-6 mb-3">
+                            <label>Category Name  </label>
+                            <input class="form-control" type="text" name="name" placeholder="Enter Category Name" ng-model="addCategory.categoryData.name" required>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Add Category Now</button>
+                </form>
+                <!-- /form -->
+
+                <div class="alert alert-primary" role="alert" ng-show="addCategory.loading">
+                    <h4 class="alert-heading">Please wait!</h4>
+                    <p> Adding new Category... Please wait!</p>
+                </div>
+
+                <div class="alert alert-success" role="alert" ng-show="addCategory.successMsg">
+                    <h4 class="alert-heading">Well done!</h4>
+                    <p>{{ addCategory.successMsg }}</p>
+                </div>
+
+                <div class="alert alert-danger" role="alert" ng-show="addCategory.errorMsg">
+                    <h4 class="alert-heading">Oops!</h4>
+                    <p>{{ addCategory.errorMsg }}</p>
+
+            </div>
+            <!-- /card body -->
+
+        </div>
+        <!-- /card -->
+    </div>
+    <!-- /grid item -->
+</div>
+<!-- /grid -->
+

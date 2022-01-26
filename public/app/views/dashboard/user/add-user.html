@@ -1,0 +1,57 @@
+<div class="dt-page__header">
+    <h1 class="dt-page__title">Add New Dashboard User</h1>
+</div>
+
+<div class="row">
+    <!-- Grid Item -->
+    <div class="col-12">
+        <!-- Card -->
+        <div class="dt-card">
+            <!-- Card Body -->
+            <div class="dt-card__body">
+                <!-- Form -->
+                <form ng-submit="addUser.addNewUser(userData);" class="mb-6" ng-show="!addUser.successMsg">
+                    <div class="form-row">
+                        <div class="col-sm-6 mb-3">
+                            <label>Name  </label>
+                            <input class="form-control" type="text" name="name" placeholder="Enter Name" ng-model="addUser.userData.name" required>
+                        </div>
+
+                        <div class="col-sm-6 mb-3">
+                            <label>Mobile Number  </label>
+                            <input class="form-control" type="number" name="mobile" placeholder="Enter Mobile Number" ng-model="addUser.userData.mobileNumber" required>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info" role="alert">
+                        <p class="mb-0"> *Default password for user will be the mobile number only.</p>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Add User Now</button>
+                </form>
+                <!-- /form -->
+
+                <div class="alert alert-primary" role="alert" ng-show="addUser.loading">
+                    <h4 class="alert-heading">Please wait!</h4>
+                    <p> Adding new user... Please wait!</p>
+                </div>
+
+                <div class="alert alert-success" role="alert" ng-show="addUser.successMsg">
+                    <h4 class="alert-heading">Well done!</h4>
+                    <p>{{ addUser.successMsg }}</p>
+                </div>
+
+                <div class="alert alert-danger" role="alert" ng-show="addUser.errorMsg">
+                    <h4 class="alert-heading">Oops!</h4>
+                    <p>{{ addUser.errorMsg }}</p>
+
+            </div>
+            <!-- /card body -->
+
+        </div>
+        <!-- /card -->
+    </div>
+    <!-- /grid item -->
+</div>
+<!-- /grid -->
+

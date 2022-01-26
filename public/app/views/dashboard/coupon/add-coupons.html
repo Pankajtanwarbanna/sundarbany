@@ -1,0 +1,63 @@
+<div class="dt-page__header">
+    <h1 class="dt-page__title">Add New Coupon</h1>
+</div>
+
+<div class="row">
+    <!-- Grid Item -->
+    <div class="col-12">
+        <!-- Card -->
+        <div class="dt-card">
+            <!-- Card Body -->
+            <div class="dt-card__body">
+                <!-- Form -->
+                <form ng-submit="addCoupons.addNewCoupon(couponData);" class="mb-6" ng-show="!addCoupons.successMsg">
+                    <div class="form-row">
+                        <div class="col-sm-6 mb-3">
+                            <label>Coupon Name  </label>
+                            <input class="form-control" type="text" name="name" placeholder="Enter Coupon Name" ng-model="addCoupons.couponData.name" required>
+                        </div>
+
+                        <div class="col-sm-6 mb-3">
+                            <label>Coupon Amount</label>
+                            <input class="form-control" type="number" name="coupon" placeholder="Enter coupon amount" ng-model="addCoupons.couponData.coupon" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+
+                        <div class="col-sm-12 mb-3">
+                            <label>Coupon Category</label>
+                            <select class="form-control" id="simple-select" ng-model="addCoupons.couponData.category" required>
+                                <option value="">-- Select Coupon Category --</option>
+                                <option ng-repeat="category in addCoupons.categories" value="{{ category._id }}">{{ category.name }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Add Customer Now</button>
+                </form>
+                <!-- /form -->
+
+                <div class="alert alert-primary" role="alert" ng-show="addCoupons.loading">
+                    <h4 class="alert-heading">Please wait!</h4>
+                    <p> Adding new customer... Please wait!</p>
+                </div>
+
+                <div class="alert alert-success" role="alert" ng-show="addCoupons.successMsg">
+                    <h4 class="alert-heading">Well done!</h4>
+                    <p>{{ addCoupons.successMsg }}</p>
+                </div>
+
+                <div class="alert alert-danger" role="alert" ng-show="addCoupons.errorMsg">
+                    <h4 class="alert-heading">Oops!</h4>
+                    <p>{{ addCoupons.errorMsg }}</p>
+
+            </div>
+            <!-- /card body -->
+
+        </div>
+        <!-- /card -->
+    </div>
+    <!-- /grid item -->
+</div>
+<!-- /grid -->
+
