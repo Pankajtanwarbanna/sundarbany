@@ -31,6 +31,12 @@ angular.module('mainController', ['authServices'])
                 app.userId = data.data._id;
                 app.loadme = true;
                 app.authorized = (data.data.role === 'SUPER-ADMIN');
+
+                user.getRedeems().then((data) => {
+                    app.redeems = data.data.response.data;
+                }).catch((error) => {
+                    app.redeems = [];
+                })
             });
 
         } else {
@@ -75,4 +81,18 @@ angular.module('mainController', ['authServices'])
             $location.path('/');
         }, 1000);
     };
+
+    this.redeemAction   = (redeemId, action) => {
+        console.log(redeemId, action);
+        user.redeemAction(redeemId, action).then((data) => {
+            app.successMsg = data.data.response.message;
+            user.getRedeems().then((data) => {
+                app.redeems = data.data.response.data;
+            }).catch((error) => {
+                app.redeems = [];
+            })
+        }).catch((error) => {
+            app.errorMsg =data.data.response.message;
+        })
+    }
 });

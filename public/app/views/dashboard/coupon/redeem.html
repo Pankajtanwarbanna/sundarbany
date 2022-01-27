@@ -1,4 +1,143 @@
 <div class="dt-page__header">
-    <h1 class="dt-page__title">Redeem Coupon (under development)</h1>
+    <h1 class="dt-page__title">Redeem Coupon</h1>
+</div>
+
+
+<!-- Grid Item -->
+<div class="col-xl-12" ng-if="!redeem.successMsg">
+
+    <!-- Card -->
+    <div class="card">
+
+        <!-- Card header -->
+        <div class="card-header card-nav border-bottom-0">
+            <div class="d-flex align-items-center justify-content-between mt-4">
+                <!-- Search Box -->
+                <form class="search-box ml-2">
+                    <input class="form-control form-control-md" placeholder="Search customer by mobile number ..." ng-model="redeem.mobileNumber" type="search">
+                    <span class="search-icon">
+                        <i class="icon icon-search icon-lg"></i>
+                    </span>
+                </form>
+                <p class="text-danger">{{ redeem.errorMsg }}</p>
+
+                <!-- /search box -->
+                <button class="btn btn-primary" type="button" ng-click="redeem.search();">Search Customer Now</button>
+            </div>
+        </div>
+        <!-- /card header -->
+    </div>
+</div>
+
+<div class="row" ng-show="redeem.successMsg">
+    <!-- Grid Item -->
+    <div class="col-12">
+        <!-- Card -->
+        <div class="dt-card">
+            <!-- Card Body -->
+            <div class="dt-card__body">
+
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">Well done!</h4>
+                    <p>{{ redeem.successMsg }}</p>
+                </div>
+            <!-- /card body -->
+        </div>
+        <!-- /card -->
+    </div>
+    <!-- /grid item -->
+</div>
+<!-- /grid -->
+</div>
+
+
+<div class="col-xl-12" ng-if="redeem.customer && !redeem.successMsg">
+
+    <!-- Card -->
+    <div class="card">
+
+        <!-- Card header -->
+        <div class="card-header card-nav border-bottom-0">
+            <div class="d-flex align-items-center justify-content-between mt-4">
+                <h1>{{ redeem.customer.name }} </h1>
+                <p class="text-primary">{{ redeem.customer.coupon}} coupons.</p>
+            </div>
+
+            <div class="col-xl-12">
+
+                <!-- Card -->
+                <div class="dt-card overflow-hidden">
+        
+                    <!-- Card Body -->
+                    <div class="dt-card__body p-0">
+        
+                        <!-- Tables -->
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th class="text-uppercase" scope="col">Category</th>
+                                    <th class="text-uppercase" scope="col">Prize Name</th>
+                                    <th class="text-uppercase" scope="col">Coupons</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="prize in redeem.prizeData">
+                                    <th scope="row">{{ $index + 1}}.</th>
+                                    <td>{{ prize.category | prizeFilter : prize.category }}</td>
+                                    <td>{{ prize.prize | prizeFilter : prize.prize }}</td>
+                                    <td>{{ prize.prize | quantityFilter: prize.prize }} {{ prize.quantity }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /tables -->
+
+                    </div>
+
+                    <!-- /card body -->
+        
+                </div>
+                <!-- /card -->
+
+                <!-- Select Prize -->
+                <div class="form-row" ng-repeat="prize in [] | range : redeem.total" ng-init="prizeIndex = $index">
+
+                    <div class="col-sm-4 mb-3">
+                        <label>Coupon Category</label>
+                        <select class="form-control" id="simple-select" ng-model="redeem.prizeData[prizeIndex].category" ng-change="selectedCategory(redeem.prizeData[prizeIndex].category, prizeIndex);" required>
+                            <option value="">-- Select Coupon Category --</option>
+                            <option ng-repeat="category in redeem.coupons" value="{{ category }}">{{ category.name }}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-4 mb-3">
+                        <label>Prize</label>
+                        <select class="form-control" id="simple-select" ng-model="redeem.prizeData[prizeIndex].prize" required>
+                            <option value="">-- Select Prize --</option>
+                            <option ng-repeat="prize in redeem.prizes[prizeIndex].coupons" value="{{ prize }}">{{ prize.name }} - {{ prize.coupon }} Coupons</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-4 mb-3">
+                        <label>Coupon Quantity</label>
+                        <input class="form-control" type="number" name="coupon" placeholder="Enter coupon Quantity" ng-model="redeem.prizeData[prizeIndex].quantity" required>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" type="button" ng-click="redeem.addRedeem();">Add prize</button>
+
+            </div>
+        </div>
+
+
+        <!-- /card header -->
+
+    </div>
+    <p class="text-danger">{{ redeem. redeemErrorMsg}} </p>
+
+    <button class="btn btn-success" type="button" ng-click="redeem.redeem();">Create Coupon Request</button>
+
 </div>
 

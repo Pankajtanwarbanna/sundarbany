@@ -105,6 +105,7 @@ var app = angular.module('userRoutes', ['ngRoute'])
                 authenticated : true,
                 permission : ['ADMIN', 'SUPER-ADMIN']
             })
+
             // users - admin dashboard
             .when('/add-user', {
                 templateUrl : '/app/views/dashboard/user/add-user.html',

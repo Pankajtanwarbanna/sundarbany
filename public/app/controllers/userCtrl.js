@@ -204,6 +204,90 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
     };
 })
 
+.controller('redeemCtrl', function (user, $scope) {
+    var app = this;
+
+    app.prizes = [];
+    app.redeemPrizes = [];
+    app.total = 0;
+    app.successMsg = false;
+
+    // get all coupons 
+    user.getCoupons().then(function (data) {
+        app.coupons = data.data.response.data;
+    }).catch((error) => {
+        app.errorMsg = 'Something went wrong, please try again later.'
+    })
+
+    // search user
+    app.search = function() {
+        if(app.mobileNumber && app.mobileNumber.length === 10) {
+            app.errorMsg = '';
+
+            user.searchCustomer(app.mobileNumber).then((data) => {
+                if(data.data.response.data.length === 0) {
+                    app.errorMsg = 'Customer not found.'
+                } else {
+                    app.customer = data.data.response.data[0];
+                }
+            }).catch((error) => {
+                app.errorMsg = 'Something went wrong!'
+            })
+        } else {
+            app.errorMsg = 'Please enter valid mobile number.'
+        }
+    }
+
+    // add redeem prize
+    app.addRedeem = () => {
+        app.total += 1;
+    }
+
+    // selected category
+    $scope.selectedCategory = (category, prizeIndex) => {
+        prizes = app.coupons.filter((coupon) => {
+            return coupon._id === JSON.parse(category)._id;
+        })
+        app.prizes[prizeIndex] = prizes[0];
+    }
+
+    // redeem
+    app.redeem  = () => {
+        app.redeemErrorMsg = '';
+        let total_coupons = 0;
+        if(app.prizeData) {
+            const data = Object.values(app.prizeData).map((prize) => {
+                if(prize.prize && prize.category) {
+                    total_coupons += JSON.parse(prize.prize).coupon * prize.quantity;
+                    return {
+                        'categoryId' : JSON.parse(prize.category)._id,
+                        'category' : JSON.parse(prize.category).name,
+                        'couponId' : JSON.parse(prize.prize)._id,
+                        'coupon' : JSON.parse(prize.prize).name,
+                        'quantity' : prize.quantity,
+                        'coupons' : JSON.parse(prize.prize).coupon * prize.quantity
+                    }
+                }
+            })
+
+            if(total_coupons > app.customer.coupon) {
+                app.redeemErrorMsg = 'Coupon amount exceeded.'
+            } else {
+                user.redeem({
+                    'prizes' : data,
+                    'customerId' : app.customer._id
+                }).then((data) => {
+                    app.successMsg = 'Coupon redeem request created.'
+                }).catch((error) => {
+                    app.redeemErrorMsg = 'Something went wrong, please try again later.'
+                })
+            }
+        } else {
+            app.redeemErrorMsg = 'Please select coupon.'
+        }
+    }
+})
+
 .controller('userCtrl', function (user) {
     var app = this;
 
@@ -230,12 +314,6 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
             app.loading = false;
         })
     };
-})
-
-.controller('redeemCtrl', function (user) {
-    var app = this;
-
-
 })
 
 .controller('settingsCtrl', function (user, $timeout) {

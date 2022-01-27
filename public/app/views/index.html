@@ -41,6 +41,8 @@
     <script src="/app/controllers/mainCtrl.js"></script>
     <script src="/app/controllers/userCtrl.js"></script>
 
+    <!-- Angular Filter -->
+    <script src="/app/filters/filter.js"></script>
 
     <!-- Angular Directives -->
     <script src="/app/directives/fileModel.js"></script>
@@ -235,11 +237,16 @@
                                     <span class="dt-side-nav__text">Home Page</span>
                                 </li>
                                 <!-- /menu header -->
-
+                                <li class="dt-side-nav__item">
+                                    <a href="/" class="dt-side-nav__link" title="Metrics">
+                                        <i class="icon icon-home icon-fw icon-lg"></i>
+                                        <span class="dt-side-nav__text">Home</span>
+                                    </a>
+                                </li>
                                 <!-- Menu Item -->
                                 <li class="dt-side-nav__item">
                                     <a href="/markets" class="dt-side-nav__link" title="Metrics">
-                                        <i class="icon icon-home icon-fw icon-lg"></i>
+                                        <i class="icon icon-settings icon-fw icon-lg"></i>
                                         <span class="dt-side-nav__text">Market</span>
                                     </a>
                                 </li>
@@ -267,14 +274,14 @@
                                     <!-- Menu Item -->
                                     <li class="dt-side-nav__item">
                                         <a href="/coupons" class="dt-side-nav__link" title="Metrics">
-                                            <i class="icon icon-users icon-fw icon-lg"></i>
+                                            <i class="icon icon-logout icon-fw icon-lg"></i>
                                             <span class="dt-side-nav__text">Coupons</span>
                                         </a>
                                     </li>
                                     <!-- /menu item -->
                                     <li class="dt-side-nav__item">
                                         <a href="/add-coupons" class="dt-side-nav__link" title="Metrics">
-                                            <i class="icon icon-users icon-fw icon-lg"></i>
+                                            <i class="icon icon-graduation icon-fw icon-lg"></i>
                                             <span class="dt-side-nav__text">Add Coupons</span>
                                         </a>
                                     </li>
@@ -352,154 +359,52 @@
                                         <div class="row">
 
                                             <!-- Grid Item -->
-                                            <div class="col-xl-4 order-xl-2">
+                                            <div class="col-xl-12 order-xl-2">
 
 
-                                                <!-- Grid -->
-                                                <div class="row">
                                                     <!-- /grid item -->
+                                                    <div class="dt-card overflow-hidden">
 
-                                                    <!-- Grid Item -->
-                                                    <div class="col-xl-12 col-md-6 col-12 order-xl-1">
+                                                        <!-- Card Body -->
+                                                        <div class="dt-card__body p-0">
+                                            
+                                                            <!-- Tables -->
+                                                            <div class="table-responsive">
+                                                                <table class="table table-hover mb-0">
+                                                                    <thead>
+                                                                        <p class="mt-5 ml-5 text-primary" ng-if="main.successMsg || main.errorMsg">{{ main.successMsg }} {{ main.errorMsg }}</p>
+                                                                    <tr>
+                                                                        <th scope="col">#</th>
+                                                                        <th class="text-uppercase" scope="col">Name</th>
+                                                                        <th class="text-uppercase" scope="col">Mobile Number</th>
+                                                                        <th class="text-uppercase" scope="col">Address</th>
+                                                                        <th class="text-uppercase" scope="col">Coupon</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
 
-                                                        <!-- Card -->
-                                                        <div class="dt-card dt-card__full-height">
-
-                                                            <!-- Card Header -->
-                                                            <div class="dt-card__header pt-6">
-
-                                                                <!-- Card Heading -->
-                                                                <div class="dt-card__heading">
-                                                                    <h3 class="dt-card__title">Contact</h3>
-                                                                </div>
-                                                                <!-- /card heading -->
-
+                                                                    <tr ng-repeat="redeem in main.redeems">
+                                                                        <th scope="row">{{ $index + 1}}.</th>
+                                                                        <td>{{ redeem.customer.name }} ({{ redeem.customer.coupon }})</td>
+                                                                        <td>+91 {{ redeem.customer.mobileNumber }}</td>
+                                                                        <td>{{ redeem.customer.address }}</td>
+                                                                        <td>{{ redeem.prizes | prizes : redeem.prizes }}</td>
+                                                                        <td>{{ redeem.market.name }}</td>
+                                                                        <td><a href="#" class="text-success" ng-click="main.redeemAction(redeem._id, 1)"> approve</a></td>
+                                                                        <td><a href="#" class="text-danger" ng-click="main.redeemAction(redeem._id, 0)"> reject</a></td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
                                                             </div>
-                                                            <!-- /card header -->
-
-                                                            <!-- Card Body -->
-                                                            <div class="dt-card__body">
-                                                                <!-- Media -->
-                                                                <div class="media mb-5">
-
-                                                                    <i class="icon icon-phone icon-xl mr-5"></i>
-
-                                                                    <!-- Media Body -->
-                                                                    <div class="media-body">
-                                                                        <span class="d-block text-light-gray f-12 mb-1">Mobile</span>
-                                                                        <a href="javascript:void(0)">{{ main.mobileNumber }}</a>
-                                                                    </div>
-                                                                    <!-- /media body -->
-
-                                                                </div>
-                                                                <!-- /media -->
-
-                                                                <!-- Media -->
-                                                                <div class="media mb-5">
-
-                                                                    <i class="icon icon-user icon-xl mr-5"></i>
-
-                                                                    <!-- Media Body -->
-                                                                    <div class="media-body">
-                                                                        <span class="d-block text-light-gray f-12 mb-1">Username</span>
-                                                                        <a href="javascript:void(0)">{{ main.role }} </a>
-                                                                    </div>
-                                                                    <!-- /media body -->
-
-                                                                </div>
-                                                                <!-- /media -->
-
-                                                            </div>
-                                                            <!-- /card body -->
-
+                                                            <!-- /tables -->
+                                            
                                                         </div>
-                                                        <!-- /card -->
-
-                                                    </div>
-                                                    <!-- /grid item -->
-
-                                                </div>
+                                                        <!-- /card body -->
+                                            
+                                                    </div>  
                                                 <!-- /grid -->
 
                                             </div>
-                                            <!-- /grid item -->
-
-                                            <!-- Grid Item -->
-                                            <div class="col-xl-8 order-xl-1">
-
-                                                <!-- Card -->
-                                                <div class="card">
-
-                                                    <!-- Card Header -->
-                                                    <div class="card-header card-nav bg-transparent border-bottom d-sm-flex justify-content-sm-between">
-                                                        <h3 class="mb-2 mb-sm-n5">Profile</h3>
-                                                    </div>
-                                                    <!-- /card header -->
-
-                                                    <!-- Card Body -->
-                                                    <div class="card-body pb-2">
-
-                                                        <!-- Tab Content-->
-                                                        <div class="tab-content mt-5">
-
-                                                            <!-- Tab panel -->
-                                                            <div id="tab-pane1" class="tab-pane active">
-
-                                                                <!-- List -->
-                                                                <ul class="dt-list dt-list-col-4">
-                                                                    <!-- List Item -->
-                                                                    <li class="dt-list__item">
-                                                                        <!-- Media -->
-                                                                        <div class="media">
-
-                                                                            <i class="icon icon-company icon-4x mr-5 align-self-center text-yellow"></i>
-
-                                                                            <!-- Media Body -->
-                                                                            <div class="media-body">
-                                                                                <span class="d-block text-light-gray f-12 mb-1">Works at</span>
-                                                                                <p class="h5 mb-0">Enterprises</p>
-                                                                            </div>
-                                                                            <!-- /media body -->
-
-                                                                        </div>
-                                                                        <!-- /media -->
-                                                                    </li>
-                                                                    <!-- /list item -->
-
-                                                                    <!-- List Item -->
-                                                                    <li class="dt-list__item">
-                                                                        <!-- Media -->
-                                                                        <div class="media">
-
-                                                                            <i class="icon icon-graduation icon-4x mr-5 align-self-center text-yellow"></i>
-
-                                                                            <!-- Media Body -->
-                                                                            <div class="media-body">
-                                                                                <span class="d-block text-light-gray f-12 mb-1">Position </span>
-                                                                                <p class="h5 mb-0">{{ main.role }}</p>
-                                                                            </div>
-                                                                            <!-- /media body -->
-
-                                                                        </div>
-                                                                        <!-- /media -->
-                                                                    </li>
-                                                                    <!-- /list item -->
-                                                                </ul>
-                                                                <!-- /list -->
-
-                                                            </div>
-                                                            <!-- /tab panel -->
-                                                        </div>
-                                                        <!-- /tab content-->
-
-                                                    </div>
-                                                    <!-- /card body -->
-
-                                                </div>
-                                                <!-- /card -->
-
-                                            </div>
-                                            <!-- /grid item -->
 
                                         </div>
                                         <!-- /grid -->

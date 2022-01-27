@@ -12,6 +12,10 @@ angular
       return $http.get("/api/customer");
     };
 
+    userFactory.searchCustomer = function (mobileNumber) {
+      return $http.get("/api/customer?mobileNumber=" + mobileNumber);
+    };
+
     userFactory.getCustomer = function ({ customerId }) {
       return $http.get("/api/customer/" + customerId);
     };
@@ -48,6 +52,18 @@ angular
 
     userFactory.addCoupons = function (data) {
       return $http.post("/api/coupon", data);
+    };
+
+    userFactory.redeem = function (data) {
+      return $http.post("/api/redeem", data);
+    };
+
+    userFactory.getRedeems = function () {
+      return $http.get("/api/redeem?status=CREATED");
+    };
+
+    userFactory.redeemAction = function (redeemId, action) {
+      return $http.patch("/api/redeem/" + redeemId +"?action=" + action);
     };
 
     userFactory.addCategory = function (data) {

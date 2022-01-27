@@ -49,3 +49,13 @@ exports.updateCustomer        = (customerId, payload, callback) => {
         return callback(null, result);
     })
 }
+
+exports.deductCoupons        = (customerId, coupons, callback) => {
+
+    Customer.findByIdAndUpdate(customerId, { $inc : { coupon : coupons * -1 }}, (error, result) => {
+        if(error) {
+            return callback(errorHelper.findMongoError(error, 'Mobile Number'))
+        }
+        return callback(null, result);
+    })
+}

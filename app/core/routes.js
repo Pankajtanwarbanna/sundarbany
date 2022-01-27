@@ -6,4 +6,5 @@ module.exports 		= function (app) {
 	app.use('/api/market', 			require(constant.path.module + 'market/index.js').router);
 	app.use('/api/customer',  		require(constant.path.module + 'customer/index.js').router);
 	app.use('/api/coupon',  		require(constant.path.module + 'coupon/index.js').router);
+	app.use('/api/redeem',  		require(constant.path.module + 'redeem/index.js').router);
 };
