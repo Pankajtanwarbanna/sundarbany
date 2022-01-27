@@ -23,6 +23,18 @@ router.get(
     customerController.getAll
 );
 
+router.get(
+    '/:customerId',
+    UserGuard,
+    customerController.getOne
+);
+
+router.patch(
+    '/:customerId',
+    UserGuard,
+    customerController.update
+);
+
 module.exports = {
     router: router
 };

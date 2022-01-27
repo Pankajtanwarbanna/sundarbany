@@ -17,6 +17,18 @@ router.post(
     couponController.category
 );
 
+router.get(
+    '/category/:categoryId',
+    UserGuard,
+    couponController.getCategory
+);
+
+router.patch(
+    '/category/:categoryId',
+    UserGuard,
+    couponController.updateCategory
+);
+
 /* coupon Routes */ 
 router.post(
     '/',
@@ -28,6 +40,18 @@ router.get(
     '/',
     UserGuard,
     couponController.getAll
+);
+
+router.get(
+    '/:couponId',
+    UserGuard,
+    couponController.getOne
+);
+
+router.patch(
+    '/:couponId',
+    UserGuard,
+    couponController.update
 );
 
 module.exports = {

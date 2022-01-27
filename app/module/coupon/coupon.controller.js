@@ -54,3 +54,73 @@ exports.getAll          = (req, res) => {
         return res.status(200).json(response.build('SUCCESS', { "data" : result }));
     })
 }
+
+exports.getOne          = (req, res) => {
+    const {
+        couponId 
+    }                   = req.params;
+
+    const query         = {
+        '_id'           : Utility.toObjectId(couponId)
+    }
+    couponService.getOneCoupon(query, (error, result) => {
+        if(error) {
+            return res.status(400).json(response.build('ERROR', 
+                errorHelper.parseError(error) 
+            ));  
+        }
+        return res.status(200).json(response.build('SUCCESS', { "data" : result }));
+    })
+}
+
+exports.update          = (req, res) => {
+    const {
+        couponId 
+    }                   = req.params;
+
+    const payload       = req.body;
+
+    couponService.updateCoupon(couponId, payload, (error, result) => {
+        if(error) {
+            return res.status(400).json(response.build('ERROR', 
+                errorHelper.parseError(error) 
+            ));  
+        }
+        return res.status(200).json(response.build('SUCCESS', { "data" : result }));
+    })
+}
+
+exports.getCategory          = (req, res) => {
+    const {
+        categoryId 
+    }                   = req.params;
+
+    const query         = {
+        '_id'           : Utility.toObjectId(categoryId)
+    }
+    couponService.getOneCategory(query, (error, result) => {
+        if(error) {
+            return res.status(400).json(response.build('ERROR', 
+                errorHelper.parseError(error) 
+            ));  
+        }
+        return res.status(200).json(response.build('SUCCESS', { "data" : result }));
+    })
+}
+
+exports.updateCategory  = (req, res) => {
+    const {
+        categoryId 
+    }                   = req.params;
+
+    const payload       = req.body;
+
+    couponService.updateCategory(categoryId, payload, (error, result) => {
+        if(error) {
+            return res.status(400).json(response.build('ERROR', 
+                errorHelper.parseError(error) 
+            ));  
+        }
+        return res.status(200).json(response.build('SUCCESS', { "data" : result }));
+    })
+}

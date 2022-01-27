@@ -12,6 +12,14 @@ angular
       return $http.get("/api/customer");
     };
 
+    userFactory.getCustomer = function ({ customerId }) {
+      return $http.get("/api/customer/" + customerId);
+    };
+
+    userFactory.updateCustomer = function (customerId, payload ) {
+      return $http.patch("/api/customer/" + customerId, payload);
+    };
+
     userFactory.addCustomer = function (data) {
       return $http.post("/api/customer", data);
     };
@@ -30,12 +38,28 @@ angular
       return $http.get("/api/coupon");
     };
 
+    userFactory.getCoupon = function ({ couponId }) {
+      return $http.get("/api/coupon/" + couponId);
+    };
+
+    userFactory.updateCoupon = function (couponId, payload ) {
+      return $http.patch("/api/coupon/" + couponId, payload);
+    };
+
     userFactory.addCoupons = function (data) {
       return $http.post("/api/coupon", data);
     };
 
     userFactory.addCategory = function (data) {
       return $http.post("/api/coupon/category", data);
+    };
+
+    userFactory.getCategory = function ({ categoryId }) {
+      return $http.get("/api/coupon/category/" + categoryId);
+    };
+
+    userFactory.updateCategory = function (categoryId, payload ) {
+      return $http.patch("/api/coupon/category/" + categoryId, payload);
     };
 
     // get users

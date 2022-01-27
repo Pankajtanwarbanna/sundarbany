@@ -12,7 +12,7 @@ exports.user            = (req, res) => {
     const payload       = {
         'name'          : body.name,
         'mobileNumber'  : body.mobileNumber,
-        'password'      : body.mobileNumber
+        'password'      : body.password
     }
 
     userService.createUser(payload, (error, result) => {

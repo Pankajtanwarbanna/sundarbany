@@ -15,7 +15,9 @@
         <!-- Card header -->
         <div class="card-header card-nav border-bottom-0">
             <div class="d-flex align-items-center justify-content-between mt-4">
-                <h1>{{ coupon.name }}</h1>
+                <h1>{{ coupon.name }} 
+                </h1>
+                <a href="/edit-category/{{ coupon._id }}" class="text-success text-small"> edit category</a>
             </div>
 
             <div class="col-xl-12">
@@ -32,17 +34,16 @@
                                 <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th class="text-uppercase" scope="col">Coupon Name</th>
                                     <th class="text-uppercase" scope="col">Coupons</th>
-                                    <th class="text-uppercase" scope="col">Added on</th>
+                                    <th class="text-uppercase" scope="col">Prize Name</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="coupon in coupon.coupons">
                                     <th scope="row">{{ $index + 1}}.</th>
-                                    <td>{{ coupon.name }}</td>
                                     <td>{{ coupon.coupon }}</td>
-                                    <td>{{ coupon.createdAt | date: 'd MMM y h:mm a' }}</td>
+                                    <td>{{ coupon.name }}</td>
+                                    <td><a href="/edit-coupon/{{ coupon._id }}" class="text-success"> edit</a></td>
                                 </tr>
                                 </tbody>
                             </table>

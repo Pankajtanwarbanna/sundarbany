@@ -38,6 +38,39 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
     };
 })
 
+.controller('editCustomerCtrl', function (user, $routeParams) {
+    var app = this;
+
+    // get all market
+    user.getMarkets().then(function (data) {
+        app.markets = data.data.response.data;
+    }).catch((error) => {
+        app.errorMsg = 'Something went wrong, please try again later.'
+    })
+
+    // get customer
+    user.getCustomer({ customerId : $routeParams.customerId }).then(function (data) {
+        app.customer = data.data.response.data[0];
+        app.loading = false;
+    }).catch((error) => {
+        app.errorMsg = error.data.response.message;
+        app.loading = false;
+    })
+
+    // update profile
+    app.updateCustomer = function (customer) {
+        app.errorMsg = '';
+        app.loading = true;
+        user.updateCustomer($routeParams.customerId, app.customer).then(function (data) {
+            app.successMsg = 'Customer has been updated.';
+            app.loading = false;
+        }).catch((error) => {
+            app.errorMsg = error.data.response.message;
+            app.loading = false;
+        })
+    };
+})
+
 .controller('marketCtrl', function (user) {
     var app = this;
 
@@ -90,6 +123,31 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
     };
 })
 
+.controller('editCategoryCtrl', function (user, $routeParams) {
+    var app = this;
+
+    // get category
+    user.getCategory({ categoryId : $routeParams.categoryId }).then(function (data) {
+        app.category = data.data.response.data;
+        app.loading = false;
+    }).catch((error) => {
+        app.errorMsg = error.data.response.message;
+        app.loading = false;
+    })
+
+    app.updateCategory = function (category) {
+        app.errorMsg = '';
+        app.loading = true;
+        user.updateCategory($routeParams.categoryId, app.category).then(function (data) {
+            app.successMsg = 'Category has been updated.';
+            app.loading = false;
+        }).catch((error) => {
+            app.errorMsg = error.data.response.message;
+            app.loading = false;
+        })
+    };
+})
+
 .controller('addCouponsCtrl', function (user) {
     var app = this;
 
@@ -106,6 +164,38 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
 
         user.addCoupons(app.couponData).then(function (data) {
             app.successMsg = 'A new coupon has been added.';
+            app.loading = false;
+        }).catch((error) => {
+            app.errorMsg = error.data.response.message;
+            app.loading = false;
+        })
+    };
+})
+
+.controller('editCouponCtrl', function (user, $routeParams) {
+    var app = this;
+
+    user.getCoupons().then(function (data) {
+        app.categories = data.data.response.data;
+    }).catch((error) => {
+        app.errorMsg = 'Something went wrong, please try again later.'
+    })
+
+    // get coupon
+    user.getCoupon({ couponId : $routeParams.couponId }).then(function (data) {
+        app.coupon = data.data.response.data;
+        app.loading = false;
+    }).catch((error) => {
+        app.errorMsg = error.data.response.message;
+        app.loading = false;
+    })
+
+    // update coupon
+    app.updateCoupon = function (coupon) {
+        app.errorMsg = '';
+        app.loading = true;
+        user.updateCoupon($routeParams.couponId, app.coupon).then(function (data) {
+            app.successMsg = 'Coupon has been updated.';
             app.loading = false;
         }).catch((error) => {
             app.errorMsg = error.data.response.message;

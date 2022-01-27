@@ -46,3 +46,44 @@ exports.getCoupons           = (query, callback) => {
         return callback(null, result);
     })
 }
+
+exports.updateCoupon        = (couponId, payload, callback) => {
+
+    Coupon.findByIdAndUpdate(couponId, payload, (error, result) => {
+        if(error) {
+            return callback(errorHelper.findMongoError(error, 'Mobile Number'))
+        }
+        return callback(null, result);
+    })
+}
+
+exports.getOneCoupon        = (query, callback) => {
+
+    Coupon.findOne(query, (error, result) => {
+        if(error) {
+            return callback(errorHelper.findMongoError(error, 'Mobile Number'))
+        }
+        return callback(null, result);
+    })
+}
+
+// category
+exports.updateCategory      = (categoryId, payload, callback) => {
+
+    Category.findByIdAndUpdate(categoryId, payload, (error, result) => {
+        if(error) {
+            return callback(errorHelper.findMongoError(error, 'Mobile Number'))
+        }
+        return callback(null, result);
+    })
+}
+
+exports.getOneCategory      = (query, callback) => {
+
+    Category.findOne(query, (error, result) => {
+        if(error) {
+            return callback(errorHelper.findMongoError(error, 'Mobile Number'))
+        }
+        return callback(null, result);
+    })
+}

@@ -24,6 +24,14 @@ var app = angular.module('userRoutes', ['ngRoute'])
                 permission : ['ADMIN', 'SUPER-ADMIN']
             })
 
+            .when('/edit-customer/:customerId', {
+                templateUrl : '/app/views/dashboard/customer/edit-customer.html',
+                controller : 'editCustomerCtrl',
+                controllerAs : 'editCustomer',
+                authenticated : true,
+                permission : ['ADMIN', 'SUPER-ADMIN']
+            })
+
             .when('/customers', {
                 templateUrl : '/app/views/dashboard/customer/customers.html',
                 controller : 'customerCtrl',
@@ -58,10 +66,26 @@ var app = angular.module('userRoutes', ['ngRoute'])
                 permission : ['ADMIN', 'SUPER-ADMIN']
             })
 
+            .when('/edit-coupon/:couponId', {
+                templateUrl : '/app/views/dashboard/coupon/edit-coupon.html',
+                controller : 'editCouponCtrl',
+                controllerAs : 'editCoupon',
+                authenticated : true,
+                permission : ['ADMIN', 'SUPER-ADMIN']
+            })
+
             .when('/add-category', {
                 templateUrl : '/app/views/dashboard/coupon/add-category.html',
                 controller : 'addCategoryCtrl',
                 controllerAs : 'addCategory',
+                authenticated : true,
+                permission : ['ADMIN', 'SUPER-ADMIN']
+            })
+
+            .when('/edit-category/:categoryId', {
+                templateUrl : '/app/views/dashboard/coupon/edit-category.html',
+                controller : 'editCategoryCtrl',
+                controllerAs : 'editCategory',
                 authenticated : true,
                 permission : ['ADMIN', 'SUPER-ADMIN']
             })

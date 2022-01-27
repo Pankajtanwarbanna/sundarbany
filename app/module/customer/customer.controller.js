@@ -33,3 +33,38 @@ exports.getAll          = (req, res) => {
         return res.status(200).json(response.build('SUCCESS', { "data" : result }));
     })
 }
+
+exports.getOne          = (req, res) => {
+    const {
+        customerId 
+    }                   = req.params;
+
+    const query         = {
+        '_id'           : Utility.toObjectId(customerId)
+    }
+    customerService.getCustomers(query, (error, result) => {
+        if(error) {
+            return res.status(400).json(response.build('ERROR', 
+                errorHelper.parseError(error) 
+            ));  
+        }
+        return res.status(200).json(response.build('SUCCESS', { "data" : result }));
+    })
+}
+
+exports.update          = (req, res) => {
+    const {
+        customerId 
+    }                   = req.params;
+
+    const payload       = req.body;
+
+    customerService.updateCustomer(customerId, payload, (error, result) => {
+        if(error) {
+            return res.status(400).json(response.build('ERROR', 
+                errorHelper.parseError(error) 
+            ));  
+        }
+        return res.status(200).json(response.build('SUCCESS', { "data" : result }));
+    })
+}

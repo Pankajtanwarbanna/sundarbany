@@ -39,3 +39,13 @@ exports.getCustomers           = (query, callback) => {
         return callback(null, result);
     })
 }
+
+exports.updateCustomer        = (customerId, payload, callback) => {
+
+    Customer.findByIdAndUpdate(customerId, payload, (error, result) => {
+        if(error) {
+            return callback(errorHelper.findMongoError(error, 'Mobile Number'))
+        }
+        return callback(null, result);
+    })
+}
