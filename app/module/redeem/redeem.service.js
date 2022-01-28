@@ -30,6 +30,17 @@ exports.getRedeem           = (query, callback) => {
         },
         {
             $unwind         : '$customer'
+        },
+        {
+            $lookup         : {
+                from        : 'users',
+                localField  : 'author',
+                foreignField: '_id',
+                as          : 'author'
+            }
+        },
+        {
+            $unwind         : '$author'
         }
     ]
     Redeem.aggregate(pipeline).exec((error, result) => {

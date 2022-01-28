@@ -8,6 +8,7 @@ const router            = require('express').Router({
 const redeemController    = require(constant.path.module + 'redeem/redeem.controller');
 
 const UserGuard         = Passport.authenticate(['admin', 'super-admin'], { session : false });
+const SuperAdminGuard   = Passport.authenticate([ 'super-admin'], { session : false });
 
 /* Redeem Routes */ 
 router.post(
@@ -24,7 +25,7 @@ router.get(
 
 router.patch(
     '/:redeemId',
-    UserGuard,
+    SuperAdminGuard,
     redeemController.redeemDone
 );
 

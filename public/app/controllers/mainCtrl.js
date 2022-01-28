@@ -83,7 +83,6 @@ angular.module('mainController', ['authServices'])
     };
 
     this.redeemAction   = (redeemId, action) => {
-        console.log(redeemId, action);
         user.redeemAction(redeemId, action).then((data) => {
             app.successMsg = data.data.response.message;
             user.getRedeems().then((data) => {

@@ -379,6 +379,7 @@
                                                                         <th class="text-uppercase" scope="col">Mobile Number</th>
                                                                         <th class="text-uppercase" scope="col">Address</th>
                                                                         <th class="text-uppercase" scope="col">Coupon</th>
+                                                                        <th class="text-uppercase" scope="col">Who added</th>
                                                                     </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -386,12 +387,12 @@
                                                                     <tr ng-repeat="redeem in main.redeems">
                                                                         <th scope="row">{{ $index + 1}}.</th>
                                                                         <td>{{ redeem.customer.name }} ({{ redeem.customer.coupon }})</td>
-                                                                        <td>+91 {{ redeem.customer.mobileNumber }}</td>
+                                                                        <td>{{ redeem.customer.mobileNumber }}</td>
                                                                         <td>{{ redeem.customer.address }}</td>
-                                                                        <td>{{ redeem.prizes | prizes : redeem.prizes }}</td>
-                                                                        <td>{{ redeem.market.name }}</td>
-                                                                        <td><a href="#" class="text-success" ng-click="main.redeemAction(redeem._id, 1)"> approve</a></td>
-                                                                        <td><a href="#" class="text-danger" ng-click="main.redeemAction(redeem._id, 0)"> reject</a></td>
+                                                                        <td style="white-space: pre-line">{{ redeem.prizes | prizes : redeem.prizes }}</td>
+                                                                        <td>{{ redeem.author.name }}</td>
+                                                                        <td ng-if="main.authorized"><a href="#" class="text-success" ng-click="main.redeemAction(redeem._id, 1)"> approve</a></td>
+                                                                        <td ng-if="main.authorized"><a href="#" class="text-danger" ng-click="main.redeemAction(redeem._id, 0)"> reject</a></td>
                                                                     </tr>
                                                                     </tbody>
                                                                 </table>

@@ -25,7 +25,7 @@ var app = angular.module('userFilters', [])
     return function(input, total) {
         let output = '';
         input.forEach((prize) => {
-            output += `${prize.coupon} - ${prize.quantity} (${prize.coupons} coupons). `
+            output += `${prize.coupon} - ${prize.quantity} (${prize.coupons} coupons)` + '\n'
         })
         return output;
     };
