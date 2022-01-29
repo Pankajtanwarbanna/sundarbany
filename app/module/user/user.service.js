@@ -20,7 +20,7 @@ exports.createUser          = (payload, callback) => {
 
 // login user
 exports.login               = (query, password, callback) => {
-    User.findOne(query).select('password _id name').exec(function(error, user) {
+    User.findOne(query).select('password _id name role').exec(function(error, user) {
         if(error) {
             return callback(errorHelper.findMongoError(error))
         }

@@ -19,7 +19,7 @@ angular.module('uploadFileService', [])
 
         fd.append( 'thumbnail', file.thumbnail);
 
-        return $http.post('/api/uploadImage', fd, {
+        return $http.post('/api/user/media', fd, {
             transformRequest: angular.identity,
             headers : { 'content-type' : undefined }
         })

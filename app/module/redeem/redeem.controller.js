@@ -14,7 +14,8 @@ exports.redeem          = (req, res) => {
     const payload       = {
         'prizes'        : body.prizes,
         'customerId'    : Utility.toObjectId(body.customerId),
-        'author'        : req.user._id
+        'author'        : req.user._id,
+        'signature'     : body.signature
     }
 
     redeemService.createRedeem(payload, (error, result) => {

@@ -14,7 +14,7 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
     })
 })
 
-.controller('addCustomerCtrl', function (user) {
+.controller('addCustomerCtrl', function (user, $scope, uploadFile) {
     var app = this;
 
     // get all market
@@ -28,13 +28,18 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
     app.addNewCustomer = function (customerData) {
         app.errorMsg = '';
         app.loading = true;
-        user.addCustomer(app.customerData).then(function (data) {
-            app.successMsg = 'A new customer has been added.';
-            app.loading = false;
-        }).catch((error) => {
-            app.errorMsg = error.data.response.message;
-            app.loading = false;
-        })
+        uploadFile.uploadImage($scope.file).then(function (data) {
+            if(data.data.success) {
+                app.customerData.profile_pic = data.data.filename;
+                user.addCustomer(app.customerData).then(function (data) {
+                    app.successMsg = 'A new customer has been added.';
+                    app.loading = false;
+                }).catch((error) => {
+                    app.errorMsg = error.data.response.message;
+                    app.loading = false;
+                })
+            }
+        });
     };
 })
 
@@ -204,7 +209,7 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
     };
 })
 
-.controller('redeemCtrl', function (user, $scope) {
+.controller('redeemCtrl', function (user, $scope, uploadFile) {
     var app = this;
 
     app.prizes = [];
@@ -255,36 +260,61 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
     app.redeem  = () => {
         app.redeemErrorMsg = '';
         let total_coupons = 0;
-        if(app.prizeData) {
-            const data = Object.values(app.prizeData).map((prize) => {
-                if(prize.prize && prize.category) {
-                    total_coupons += JSON.parse(prize.prize).coupon * prize.quantity;
-                    return {
-                        'categoryId' : JSON.parse(prize.category)._id,
-                        'category' : JSON.parse(prize.category).name,
-                        'couponId' : JSON.parse(prize.prize)._id,
-                        'coupon' : JSON.parse(prize.prize).name,
-                        'quantity' : prize.quantity,
-                        'coupons' : JSON.parse(prize.prize).coupon * prize.quantity
+        console.log(app.file)
+        if(app.file) {
+            if(app.prizeData) {
+                const data = Object.values(app.prizeData).map((prize) => {
+                    if(prize.prize && prize.category) {
+                        total_coupons += JSON.parse(prize.prize).coupon * prize.quantity;
+                        return {
+                            'categoryId' : JSON.parse(prize.category)._id,
+                            'category' : JSON.parse(prize.category).name,
+                            'couponId' : JSON.parse(prize.prize)._id,
+                            'coupon' : JSON.parse(prize.prize).name,
+                            'quantity' : prize.quantity,
+                            'coupons' : JSON.parse(prize.prize).coupon * prize.quantity
+                        }
                     }
-                }
-            })
-
-            if(total_coupons > app.customer.coupon) {
-                app.redeemErrorMsg = 'Coupon amount exceeded.'
-            } else {
-                user.redeem({
-                    'prizes' : data,
-                    'customerId' : app.customer._id
-                }).then((data) => {
-                    app.successMsg = 'Coupon redeem request created.'
-                }).catch((error) => {
-                    app.redeemErrorMsg = 'Something went wrong, please try again later.'
                 })
+    
+                if(total_coupons > app.customer.coupon) {
+                    app.redeemErrorMsg = 'Coupon amount exceeded.'
+                } else {
+                    uploadFile.uploadImage(app.file).then(function (data) {
+                        if(data.data.success) {
+                            user.redeem({
+                                'prizes' : data,
+                                'customerId' : app.customer._id,
+                                'signature' : data.data.filename
+                            }).then((data) => {
+                                app.successMsg = 'Coupon redeem request created.'
+                            }).catch((error) => {
+                                app.redeemErrorMsg = 'Something went wrong, please try again later.'
+                            })
+                        }
+                    });
+                }
+            } else {
+                app.redeemErrorMsg = 'Please select coupon.'
             }
         } else {
-            app.redeemErrorMsg = 'Please select coupon.'
+            app.redeemErrorMsg = 'Please upload signature.'
         }
+    }
+})
+
+.controller('prizeHistoryCtrl', function(user) {
+    var app = this;
+    // get redeems 
+    user.getRedeems('').then((data) => {
+        app.redeems = data.data.response.data.filter((redeem) => redeem.status !== 'CREATED');
+    }).catch((error) => {
+        app.redeems = [];
+    })
+
+    // view
+    app.view    = (id) => {
+        app.currentRedeem = app.redeems.filter((redeem) => redeem._id === id);
     }
 })
 

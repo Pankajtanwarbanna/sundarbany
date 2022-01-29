@@ -87,7 +87,7 @@ var app = angular.module('userRoutes', ['ngRoute'])
                 controller : 'editCategoryCtrl',
                 controllerAs : 'editCategory',
                 authenticated : true,
-                permission : ['ADMIN', 'SUPER-ADMIN']
+                permission : [ 'SUPER-ADMIN']
             })
 
             .when('/coupons', {
@@ -95,13 +95,21 @@ var app = angular.module('userRoutes', ['ngRoute'])
                 controller : 'couponsCtrl',
                 controllerAs : 'coupons',
                 authenticated : true,
-                permission : ['ADMIN', 'SUPER-ADMIN']
+                permission : ['SUPER-ADMIN']
             })
 
             .when('/redeem', {
                 templateUrl : '/app/views/dashboard/coupon/redeem.html',
                 controller : 'redeemCtrl',
                 controllerAs : 'redeem',
+                authenticated : true,
+                permission : ['ADMIN', 'SUPER-ADMIN']
+            })
+
+            .when('/prize-history', {
+                templateUrl : '/app/views/dashboard/coupon/prize-history.html',
+                controller : 'prizeHistoryCtrl',
+                controllerAs : 'prizeHistory',
                 authenticated : true,
                 permission : ['ADMIN', 'SUPER-ADMIN']
             })

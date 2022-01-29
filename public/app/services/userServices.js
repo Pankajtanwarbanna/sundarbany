@@ -58,8 +58,8 @@ angular
       return $http.post("/api/redeem", data);
     };
 
-    userFactory.getRedeems = function () {
-      return $http.get("/api/redeem?status=CREATED");
+    userFactory.getRedeems = function (filter) {
+      return $http.get("/api/redeem" + filter);
     };
 
     userFactory.redeemAction = function (redeemId, action) {

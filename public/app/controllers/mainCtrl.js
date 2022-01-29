@@ -32,7 +32,7 @@ angular.module('mainController', ['authServices'])
                 app.loadme = true;
                 app.authorized = (data.data.role === 'SUPER-ADMIN');
 
-                user.getRedeems().then((data) => {
+                user.getRedeems('?status=CREATED').then((data) => {
                     app.redeems = data.data.response.data;
                 }).catch((error) => {
                     app.redeems = [];
@@ -62,7 +62,11 @@ angular.module('mainController', ['authServices'])
                 app.loading = false;
                 app.successMsg = 'User authenticated. Logging in...';
                 $timeout(function () {
-                    $location.path('/settings');
+                    if(data?.data?.response?.data?.user?.role === 'SUPER-ADMIN') {
+                        $location.path('/settings');
+                    } else {
+                        $location.path('/redeem');
+                    }
                     app.logData = '';
                     app.successMsg = false;
                 }, 2000);
@@ -85,7 +89,7 @@ angular.module('mainController', ['authServices'])
     this.redeemAction   = (redeemId, action) => {
         user.redeemAction(redeemId, action).then((data) => {
             app.successMsg = data.data.response.message;
-            user.getRedeems().then((data) => {
+            user.getRedeems('?status=CREATED').then((data) => {
                 app.redeems = data.data.response.data;
             }).catch((error) => {
                 app.redeems = [];
@@ -93,5 +97,9 @@ angular.module('mainController', ['authServices'])
         }).catch((error) => {
             app.errorMsg =data.data.response.message;
         })
+    }
+
+    app.check   = (id) => {
+        app.currentRedeem = app.redeems.filter((redeem) => redeem._id === id);
     }
 });

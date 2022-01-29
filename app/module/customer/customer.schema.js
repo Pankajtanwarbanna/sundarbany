@@ -25,6 +25,10 @@ const customerSchema  = new mongoose.Schema({
     },
     marketId        : {
         type        : mongoose.Schema.ObjectId
+    },
+    profile_pic     : {
+        type        : String,
+        required    : true
     }
 }, {
     timestamps: true

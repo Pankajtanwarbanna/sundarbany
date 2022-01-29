@@ -35,10 +35,16 @@
                                 <option ng-repeat="market in addCustomer.markets" value="{{ market._id }}">{{ market.name }}</option>
                             </select>
                         </div>
+     
 
                         <div class="col-sm-6 mb-3">
                             <label>Coupon Amount</label>
                             <input class="form-control" type="number" name="coupon" placeholder="Enter coupon amount" ng-model="addCustomer.customerData.coupon" required>
+                        </div>
+
+                        <div class="col-sm-12 mb-3">
+                            <label>Upload Profile Picture </label>
+                            <input class="form-control" type="file" file-model="file.thumbnail" name="thumbnail" required>
                         </div>
                     </div>
 

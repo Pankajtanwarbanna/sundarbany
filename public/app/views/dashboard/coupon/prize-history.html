@@ -1,0 +1,81 @@
+<div class="dt-page__header">
+    <h1 class="dt-page__title">Prizes History.</h1>
+</div>
+
+<!-- Grid -->
+<div class="row">
+
+    <!-- Grid Item -->
+    <div class="col-xl-12 order-xl-2">
+
+        <!-- /grid item -->
+        <div class="dt-card overflow-hidden">
+
+            <!-- Card Body -->
+            <div class="dt-card__body p-0">
+
+                <!-- Tables -->
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th class="text-uppercase" scope="col">Name</th>
+                                <th class="text-uppercase" scope="col">Mobile Number</th>
+                                <th class="text-uppercase" scope="col">Signature</th>
+                                <th class="text-uppercase" scope="col">Address</th>
+                                <th class="text-uppercase" scope="col">Coupon</th>
+                                <th class="text-uppercase" scope="col">Who added</th>
+                                <th class="text-uppercase" scope="col">STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="redeem in prizeHistory.redeems">
+                                <th scope="row">{{ $index + 1}}.</th>
+                                <td>{{ redeem.customer.name }} ({{ redeem.customer.coupon }})</td>
+                                <td>{{ redeem.customer.mobileNumber }}</td>
+                                <th>
+                                    <img class=" dt-avatar__shadow size-60 mr-sm-4 mb-6" src="/assets/uploads/{{ redeem.signature }}">
+                                </th>
+                                <td>{{ redeem.customer.address }}</td>
+                                <td style="white-space: pre-line" ng-click="prizeHistory.view(redeem._id);">{{ redeem.prizes.length }} Prizes <a href="#" data-toggle="modal" data-target="#exampleModal">view</a></td>
+                                <td>{{ redeem.author.name }} on {{ redeem.createdAt | date : 'MMM d, y h:mm a'}}</td>
+                                <td ng-if="redeem.status === 'COMPLETED'" ><p class="text-success">{{ redeem.status }} </p></td>
+                                <td ng-if="redeem.status === 'REJECTED'"><p  class="text-danger">{{ redeem.status }} </p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /tables -->
+
+            </div>
+            <!-- /card body -->
+
+        </div>
+        <!-- /grid -->
+
+    </div>
+
+</div>
+<!-- /grid -->
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Total Prizes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li ng-repeat="prize in main.currentRedeem[0].prizes"> {{ prize.quantity }} x {{ prize.coupon }} [{{ prize.category }}] - {{ prize.coupons}} Coupons</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

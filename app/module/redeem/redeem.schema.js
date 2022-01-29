@@ -19,6 +19,10 @@ const redeemSchema  = new mongoose.Schema({
     author          : {
         type        : mongoose.Schema.ObjectId,
         required    : true
+    },
+    signature       : {
+        type        : String,
+        required    : true
     }
 }, {
     timestamps: true

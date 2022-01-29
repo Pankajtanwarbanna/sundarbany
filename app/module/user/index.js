@@ -42,6 +42,12 @@ router.post(
     userController.login
 );
 
+// * User Media */
+router.post(
+    '/media',
+    userController.media
+);
+
 module.exports = {
     router: router
 };

@@ -21,6 +21,11 @@ exports.getRedeem           = (query, callback) => {
             $match          : query
         },
         {
+            $sort           : {
+                createdAt   : -1
+            }
+        },
+        {
             $lookup         : {
                 from        : 'customers',
                 localField  : 'customerId',

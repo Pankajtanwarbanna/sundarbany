@@ -243,6 +243,12 @@
                                         <span class="dt-side-nav__text">Home</span>
                                     </a>
                                 </li>
+                                <li class="dt-side-nav__item">
+                                    <a href="/prize-history" class="dt-side-nav__link" title="Metrics">
+                                        <i class="icon icon-tag icon-fw icon-lg"></i>
+                                        <span class="dt-side-nav__text">Prizes History</span>
+                                    </a>
+                                </li>
                                 <!-- Menu Item -->
                                 <li class="dt-side-nav__item">
                                     <a href="/markets" class="dt-side-nav__link" title="Metrics">
@@ -265,21 +271,21 @@
                                     </li>
                                 </div>
 
-                                <div>
+                                <div  ng-if="main.authorized">
                                     <!-- Menu Header -->
                                     <li class="dt-side-nav__item dt-side-nav__header">
                                         <span class="dt-side-nav__text">Coupon Management</span>
                                     </li>
                                     <!-- /menu header -->
                                     <!-- Menu Item -->
-                                    <li class="dt-side-nav__item">
+                                    <li class="dt-side-nav__item"  ng-if="main.authorized">
                                         <a href="/coupons" class="dt-side-nav__link" title="Metrics">
                                             <i class="icon icon-logout icon-fw icon-lg"></i>
                                             <span class="dt-side-nav__text">Coupons</span>
                                         </a>
                                     </li>
                                     <!-- /menu item -->
-                                    <li class="dt-side-nav__item">
+                                    <li class="dt-side-nav__item"  ng-if="main.authorized">
                                         <a href="/add-coupons" class="dt-side-nav__link" title="Metrics">
                                             <i class="icon icon-graduation icon-fw icon-lg"></i>
                                             <span class="dt-side-nav__text">Add Coupons</span>
@@ -377,6 +383,7 @@
                                                                         <th scope="col">#</th>
                                                                         <th class="text-uppercase" scope="col">Name</th>
                                                                         <th class="text-uppercase" scope="col">Mobile Number</th>
+                                                                        <th class="text-uppercase" scope="col">Signature</th>
                                                                         <th class="text-uppercase" scope="col">Address</th>
                                                                         <th class="text-uppercase" scope="col">Coupon</th>
                                                                         <th class="text-uppercase" scope="col">Who added</th>
@@ -388,9 +395,12 @@
                                                                         <th scope="row">{{ $index + 1}}.</th>
                                                                         <td>{{ redeem.customer.name }} ({{ redeem.customer.coupon }})</td>
                                                                         <td>{{ redeem.customer.mobileNumber }}</td>
+                                                                        <th>
+                                                                            <img class=" dt-avatar__shadow size-60 mr-sm-4 mb-6" src="/assets/uploads/{{ redeem.signature }}">
+                                                                        </th>
                                                                         <td>{{ redeem.customer.address }}</td>
-                                                                        <td style="white-space: pre-line">{{ redeem.prizes | prizes : redeem.prizes }}</td>
-                                                                        <td>{{ redeem.author.name }}</td>
+                                                                        <td style="white-space: pre-line" ng-click="main.check(redeem._id);">{{ redeem.prizes.length }} Prizes <br><a href="#" data-toggle="modal" data-target="#exampleModal">view</a></td>
+                                                                        <td>{{ redeem.author.name }} on {{ redeem.createdAt | date : 'MMM d, y h:mm a'}}</td>
                                                                         <td ng-if="main.authorized"><a href="#" class="text-success" ng-click="main.redeemAction(redeem._id, 1)"> approve</a></td>
                                                                         <td ng-if="main.authorized"><a href="#" class="text-danger" ng-click="main.redeemAction(redeem._id, 0)"> reject</a></td>
                                                                     </tr>
@@ -430,6 +440,26 @@
         </div>
     </div>
     <!-- /root -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Total Prizes</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li ng-repeat="prize in main.currentRedeem[0].prizes"> {{ prize.quantity }} x {{ prize.coupon }} [{{ prize.category }}] - {{ prize.coupons}} Coupons</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Optional JavaScript -->
     <script src="/assets/modules/jquery/dist/jquery.min.js"></script>
