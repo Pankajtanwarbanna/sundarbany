@@ -53,7 +53,7 @@ exports.redeemDone      = (req, res) => {
                 errorHelper.parseError(error) 
             ));  
         }
-        if(underscore.isEmpty(redeem) || redeem[0].status !== 'CREATED') {
+        if(underscore.isEmpty(redeem) || redeem[0].status === 'CREATED') {
             return res.status(400).json(response.build('ERROR', 
                 errorHelper.parseError('Invalid coupon redeem request.') 
             ));  
@@ -61,25 +61,78 @@ exports.redeemDone      = (req, res) => {
             redeem = underscore.first(redeem);
 
             const status = req.query.action === '1' ? 'COMPLETED' : 'REJECTED';
-            redeemService.updateRedeem(Utility.toObjectId(req.params.redeemId), { status },(error, result) => {
-                if(error) {
-                    return res.status(400).json(response.build('ERROR', 
-                        errorHelper.parseError(error) 
-                    ));  
-                }
-                if(req.query.action === '1') {
-                    let totalCoupons = 0;
-                    (redeem.prizes || []).forEach((prize) => {
-                        totalCoupons += prize.coupons;
-                    });
-        
-                    customerService.deductCoupons(redeem.customerId, totalCoupons, (error, data) => {
-                        return res.status(200).json(response.build('SUCCESS', { "message" : "Yay, successfully approved." }));
-                    })
-                } else {
+
+            const payload   = {
+                '_id'       : redeem.customerId
+            }
+
+            if(status === 'REJECTED') {
+                redeemService.updateRedeem(Utility.toObjectId(req.params.redeemId), { status },(error, result) => {
+                    if(error) {
+                        return res.status(400).json(response.build('ERROR', 
+                            errorHelper.parseError(error) 
+                        ));  
+                    }
                     return res.status(200).json(response.build('SUCCESS', { "message" : "Yay, successfully rejected." }));
-                }
-            })
+                })
+            } else {
+                customerService.getCustomers(payload, (error, data) => {
+                    if(error) {
+                        return res.status(400).json(response.build('ERROR', 
+                            errorHelper.parseError(error) 
+                        ));  
+                    }
+                    if(underscore.isEmpty(data)) {
+                        return res.status(400).json(response.build('ERROR', 
+                            errorHelper.parseError('Customer not found.') 
+                        ));  
+                    }
+    
+                    const customer      = underscore.first(data);
+                    const prizes        = customer.prizes;
+                    const redeemPrizes  = redeem.prizes;
+    
+                    let isRedeemValid   = true;
+                    prizes.forEach((prize) => {
+
+                        const category  = prize.categoryId;
+                        const coupon    = prize.couponId;
+                        
+                        const redeem    = redeemPrizes.filter((prize) => {
+                            return prize.categoryId === category && prize.couponId === coupon;
+                        })
+    
+                        if(underscore.isEmpty(redeem) || ((redeem[0].cost * redeem[0].quantity) > (prize.cost * prize.quantity))) {
+                            isRedeemValid   = false;
+                        } else {
+                            prize.quantity  -= redeem[0].quantity;
+                        }
+                    })
+
+                    if(isRedeemValid) {
+                        redeemService.updateRedeem(Utility.toObjectId(req.params.redeemId), { status },(error, result) => {
+                            if(error) {
+                                return res.status(400).json(response.build('ERROR', 
+                                    errorHelper.parseError(error) 
+                                ));  
+                            }
+
+                            customerService.deductCoupons(redeem.customerId, prizes, (error, data) => {
+                                if(error) {
+                                    return res.status(400).json(response.build('ERROR', 
+                                        errorHelper.parseError(error) 
+                                    ));  
+                                }
+                                return res.status(200).json(response.build('SUCCESS', { "message" : "Yay, successfully approved." }));
+                            })
+                        })
+                    } else {
+                        return res.status(400).json(response.build('ERROR', 
+                            errorHelper.parseError('Customer does not have sufficient coupons to redeem.') 
+                        ));
+                    }
+                })
+            }
         }
     })
 }

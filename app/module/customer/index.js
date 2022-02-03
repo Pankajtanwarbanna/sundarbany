@@ -29,6 +29,12 @@ router.get(
     customerController.getOne
 );
 
+router.get(
+    '/:customerId/history',
+    UserGuard,
+    customerController.getHistory
+);
+
 router.patch(
     '/:customerId',
     UserGuard,

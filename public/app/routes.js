@@ -40,6 +40,14 @@ var app = angular.module('userRoutes', ['ngRoute'])
                 permission : ['ADMIN', 'SUPER-ADMIN']
             })
 
+            .when('/customer-history/:customerId', {
+                templateUrl : '/app/views/dashboard/customer/customer-history.html',
+                controller : 'customerHistoryCtrl',
+                controllerAs : 'customerHistory',
+                authenticated : true,
+                permission : ['ADMIN', 'SUPER-ADMIN']
+            })
+
             // market - admin dashboard
             .when('/add-market', {
                 templateUrl : '/app/views/dashboard/market/add-market.html',

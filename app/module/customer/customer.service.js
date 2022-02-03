@@ -52,9 +52,33 @@ exports.updateCustomer        = (customerId, payload, callback) => {
 
 exports.deductCoupons        = (customerId, coupons, callback) => {
 
-    Customer.findByIdAndUpdate(customerId, { $inc : { coupon : coupons * -1 }}, (error, result) => {
+    Customer.findByIdAndUpdate(customerId, { prizes : coupons }, (error, result) => {
         if(error) {
             return callback(errorHelper.findMongoError(error, 'Mobile Number'))
+        }
+        console.log(result)
+        return callback(null, result);
+    })
+}
+
+// get customer history
+exports.getCustomerHistory     = (query, callback) => {
+    const pipeline             = [
+        {
+            $match              : query
+        },
+        {
+            $lookup             : {
+                from            : 'redeems',
+                localField      : '_id',
+                foreignField    : 'customerId',
+                as              : 'history'
+            }
+        }
+    ]
+    Customer.aggregate(pipeline).exec((error, result) => {
+        if(error) {
+            return callback(errorHelper.findMongoError(error))
         }
         return callback(null, result);
     })

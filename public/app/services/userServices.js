@@ -28,6 +28,10 @@ angular
       return $http.post("/api/customer", data);
     };
 
+    userFactory.getHistory = function ({ customerId }) {
+      return $http.get("/api/customer/"+ customerId + '/history');
+    };
+
     // get markets
     userFactory.getMarkets = function () {
       return $http.get("/api/market");

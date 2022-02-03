@@ -384,6 +384,22 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
     }
 })
 
+.controller('customerHistoryCtrl', function(user, $routeParams) {
+    var app = this;
+
+    // get customer history
+    user.getHistory({ customerId : $routeParams.customerId }).then((data) => {
+        app.customer = data.data.response.data[0];
+    }).catch((error) => {
+        app.customer = {};
+    })
+
+    // view
+    app.view    = (data) => {
+        app.current = data;
+    }
+})
+
 .controller('userCtrl', function (user) {
     var app = this;
 

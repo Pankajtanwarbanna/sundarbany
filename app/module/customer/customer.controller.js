@@ -52,6 +52,25 @@ exports.getOne          = (req, res) => {
     })
 }
 
+exports.getHistory      = (req, res) => {
+    const {
+        customerId 
+    }                   = req.params;
+
+    const query         = {
+        '_id'           : Utility.toObjectId(customerId)
+    }
+
+    customerService.getCustomerHistory(query, (error, result) => {
+        if(error) {
+            return res.status(400).json(response.build('ERROR', 
+                errorHelper.parseError(error) 
+            ));  
+        }
+        return res.status(200).json(response.build('SUCCESS', { "data" : result }));
+    })
+}
+
 exports.update          = (req, res) => {
     const {
         customerId 

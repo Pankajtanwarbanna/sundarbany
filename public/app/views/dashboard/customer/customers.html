@@ -41,6 +41,7 @@
                             <td>{{ user.address }}</td>
                             <td style="white-space: pre-line" ng-click="customer.view(user._id);">{{ user.prizes.length }} Prizes <a href="#" data-toggle="modal" data-target="#exampleModal">view</a></td>
                             <td>{{ user.market.name }}</td>
+                            <td><a href="/customer-history/{{ user._id }}" class="text-primary"> view coupons history</a></td>
                             <td><a href="/edit-customer/{{ user._id }}" class="text-success"> edit</a></td>
                         </tr>
                         </tbody>
