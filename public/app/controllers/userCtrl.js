@@ -66,31 +66,26 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
         app.loading = true;
 
         if(app.prizeData) {
+            console.log(app.prizeData)
             const prizes = Object.values(app.prizeData).map((prize) => {
-                if(prize.prize && prize.category) {
+                if(prize.category) {
                     return {
                         'categoryId' : JSON.parse(prize.category)._id,
                         'category' : JSON.parse(prize.category).name,
-                        'couponId' : JSON.parse(prize.prize)._id,
-                        'coupon' : JSON.parse(prize.prize).name,
-                        'quantity' : prize.quantity,
-                        'cost': JSON.parse(prize.prize).coupon, 
-                        'coupons' : JSON.parse(prize.prize).coupon * prize.quantity
+                        'quantity' : prize.quantity
                     }
                 }
             })
 
             let prizeValues = {};
             prizes.forEach((val) => {
-                let key = `${val.categoryId}_${val.couponId}`;
-                if(prizeValues[key]) {
-                    prizeValues[key]['quantity'] += val.quantity;
-                    prizeValues[key]['cost'] += val.cost;
-                    prizeValues[key]['coupons'] += val.coupons;
+                if(prizeValues[val.categoryId]) {
+                    prizeValues[val.categoryId]['quantity'] += val.quantity;
                 } else {
-                    prizeValues[key] = val;
+                    prizeValues[val.categoryId] = val;
                 }
             })
+            console.log(prizeValues)
             uploadFile.uploadImage($scope.file).then(function (data) {
                 if(data.data.success) {
                     app.customerData.profile_pic = data.data.filename;
@@ -340,16 +335,27 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
         if(app.file) {
             if(app.customer.prizes) {
                 app.customer.prizes.forEach((prize) => {
-                    if(prize.quantity * prize.cost > prize.coupons) {
+                    if(prize.selected_quantity > prize.quantity) {
                         app.redeemErrorMsg = 'Coupon value exceeded. Please check.'
                     }
                 })
+                // filter empty data
+                let prizes = app.customer.prizes.filter((prize) => {
+                    return prize.couponId && prize.selected_quantity;
+                })
 
+                // add coupon name 
+                prizes = prizes.map((prize) => {
+                    let coupons = app.couponsWithCategory[prize.categoryId].coupons.filter((category) => {
+                        return category._id === prize.couponId;
+                    });
+                    return { ...prize, 'coupon' : coupons[0].name }
+                })
                 if(!app.redeemErrorMsg) {
                     uploadFile.uploadImage(app.file).then(function (data) {
                         if(data.data.success) {
                             user.redeem({
-                                'prizes' : app.customer.prizes,
+                                'prizes' : prizes,
                                 'customerId' : app.customer._id,
                                 'signature' : data.data.filename
                             }).then((data) => {

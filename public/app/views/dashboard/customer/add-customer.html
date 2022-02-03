@@ -70,7 +70,6 @@
                                                     <tr>
                                                         <th scope="col">#</th>
                                                         <th class="text-uppercase" scope="col">Category</th>
-                                                        <th class="text-uppercase" scope="col">Prize Name</th>
                                                         <th class="text-uppercase" scope="col">Coupons</th>
                                                     </tr>
                                                 </thead>
@@ -78,7 +77,6 @@
                                                     <tr ng-repeat="prize in addCustomer.prizeData">
                                                         <th scope="row">{{ $index + 1}}.</th>
                                                         <td>{{ prize.category | prizeFilter : prize.category }}</td>
-                                                        <td>{{ prize.prize | prizeFilter : prize.prize }}</td>
                                                         <td>{{ prize.prize | quantityFilter: prize.prize }}
                                                             {{ prize.quantity }}</td>
                                                     </tr>
@@ -98,7 +96,7 @@
                                 <div class="form-row" ng-repeat="prize in [] | range : addCustomer.total"
                                     ng-init="prizeIndex = $index">
 
-                                    <div class="col-sm-4 mb-3">
+                                    <div class="col-sm-6 mb-3">
                                         <label>Coupon Category</label>
                                         <select class="form-control" id="simple-select"
                                             ng-model="addCustomer.prizeData[prizeIndex].category"
@@ -110,18 +108,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-4 mb-3">
-                                        <label>Prize</label>
-                                        <select class="form-control" id="simple-select"
-                                            ng-model="addCustomer.prizeData[prizeIndex].prize" required>
-                                            <option value="">-- Select Prize --</option>
-                                            <option ng-repeat="prize in addCustomer.prizes[prizeIndex].coupons"
-                                                value="{{ prize }}">{{ prize.name }} - {{ prize.coupon }} Coupons
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-sm-4 mb-3">
+                                    <div class="col-sm-6 mb-3">
                                         <label>Coupon Quantity</label>
                                         <input class="form-control" type="number" name="coupon"
                                             placeholder="Enter coupon Quantity"
@@ -129,8 +116,7 @@
                                     </div>
                                 </div>
 
-                                <button class="btn btn-primary" type="button" ng-click="addCustomer.addRedeem();">Add
-                                    prize</button>
+                                <button class="btn btn-primary" type="button" ng-click="addCustomer.addRedeem();">Gift Coupon</button>
                             </div>
                         </div>
 

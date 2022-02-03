@@ -53,7 +53,7 @@ exports.redeemDone      = (req, res) => {
                 errorHelper.parseError(error) 
             ));  
         }
-        if(underscore.isEmpty(redeem) || redeem[0].status === 'CREATED') {
+        if(underscore.isEmpty(redeem) || redeem[0].status !== 'CREATED') {
             return res.status(400).json(response.build('ERROR', 
                 errorHelper.parseError('Invalid coupon redeem request.') 
             ));  
@@ -96,16 +96,19 @@ exports.redeemDone      = (req, res) => {
                     prizes.forEach((prize) => {
 
                         const category  = prize.categoryId;
-                        const coupon    = prize.couponId;
                         
                         const redeem    = redeemPrizes.filter((prize) => {
-                            return prize.categoryId === category && prize.couponId === coupon;
+                            return prize.categoryId === category;
                         })
     
-                        if(underscore.isEmpty(redeem) || ((redeem[0].cost * redeem[0].quantity) > (prize.cost * prize.quantity))) {
-                            isRedeemValid   = false;
-                        } else {
-                            prize.quantity  -= redeem[0].quantity;
+                        if(underscore.isEmpty(redeem) === false) {
+                            if(redeem[0].selected_quantity > (prize.quantity)) {
+                                isRedeemValid   = false;
+                            } else {
+                                prize.quantity  -= redeem[0].selected_quantity;
+                                prize.coupon     = redeem[0].coupon;
+                                prize.couponId   = redeem[0].couponId;
+                            }
                         }
                     })
 

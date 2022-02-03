@@ -116,7 +116,7 @@
             </div>
             <div class="modal-body">
                 <ul>
-                    <li ng-repeat="prize in customerHistory.current"> {{ prize.quantity }} x {{ prize.cost }} [{{ prize.category }}] - {{ prize.quantity * prize.cost }} Coupons</li>
+                    <li ng-repeat="prize in customerHistory.current"> {{ prize.selected_quantity || prize.quantity }} Coupons : {{ prize.coupon }} [{{ prize.category }}]</li>
                 </ul>
             </div>
             <div class="modal-footer">

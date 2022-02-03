@@ -43,6 +43,12 @@ angular.module('mainController', ['authServices'])
                         if(redeem.status === 'CREATED') {
                             app.open += 1;
                             app.prizes += redeem.prizes.length;
+                            let redeemDate = new Date(redeem.createdAt);
+                            let today = new Date();
+                            if(redeemDate.getDate() == today.getDate() && redeemDate.getMonth() == today.getMonth() && redeemDate.getFullYear() == today.getFullYear()) {
+                                app.todays += 1;
+                            }
+
                         }
                     })
                 }).catch((error) => {
@@ -106,7 +112,7 @@ angular.module('mainController', ['authServices'])
                 app.redeems = [];
             })
         }).catch((error) => {
-            app.errorMsg =data.data.response.message;
+            app.errorMsg = error.data.response.message;
         })
     }
 

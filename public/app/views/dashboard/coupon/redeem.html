@@ -78,7 +78,6 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th class="text-uppercase" scope="col">Category</th>
-                                    <th class="text-uppercase" scope="col">Prize Name</th>
                                     <th class="text-uppercase" scope="col">Coupons</th>
                                 </tr>
                                 </thead>
@@ -86,8 +85,7 @@
                                 <tr ng-repeat="prize in redeem.customer.prizes">
                                     <th scope="row">{{ $index + 1}}.</th>
                                     <td>{{ prize.category }}</td>
-                                    <td>{{ prize.coupon }}</td>
-                                    <td>{{ prize.coupons }} Coupons <span class="text-danger">({{ prize.coupons - (prize.quantity * prize.cost) }} Coupons left )</span></td>
+                                    <td>{{ prize.quantity }} Coupons <span class="text-danger">({{ prize.quantity - prize.selected_quantity }} coupon left)</span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -107,7 +105,7 @@
                 <div class="form-row" ng-repeat="prize in redeem.customer.prizes">
                     <div class="col-sm-4 mb-3">
                         <label>Coupon Category</label>
-                        <select class="form-control" id="simple-select" ng-model="prize.categoryId" ng-change="selectedCategory(redeem.prizeData[prizeIndex].category, prizeIndex);" required>
+                        <select class="form-control" id="simple-select" ng-model="prize.categoryId" ng-change="selectedCategory(redeem.prizeData[prizeIndex].category, prizeIndex);" required disabled>
                             <option value="">-- Select Coupon Category --</option>
                             <option ng-repeat="category in redeem.coupons" value="{{ category._id }}">{{ category.name }}</option>
                         </select>
@@ -123,7 +121,7 @@
 
                     <div class="col-sm-4 mb-3">
                         <label>Coupon Quantity</label>
-                        <input class="form-control" type="number" name="coupon" placeholder="Enter coupon Quantity" ng-model="prize.quantity" required>
+                        <input class="form-control" type="number" name="coupon" placeholder="Enter coupon Quantity" ng-model="prize.selected_quantity" required>
                     </div>
                 </div>
 
