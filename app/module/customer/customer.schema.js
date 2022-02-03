@@ -18,10 +18,10 @@ const customerSchema  = new mongoose.Schema({
         type        : String,
         required    : true
     },
-    coupon          : {
-        type        : Number,
+    prizes          : {
+        type        : Array,
         required    : true,
-        default     : 0
+        default     : []
     },
     marketId        : {
         type        : mongoose.Schema.ObjectId

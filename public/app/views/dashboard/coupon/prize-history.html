@@ -23,6 +23,7 @@
                                 <th class="text-uppercase" scope="col">Name</th>
                                 <th class="text-uppercase" scope="col">Mobile Number</th>
                                 <th class="text-uppercase" scope="col">Signature</th>
+                                <th class="text-uppercase" scope="col">Market</th>
                                 <th class="text-uppercase" scope="col">Address</th>
                                 <th class="text-uppercase" scope="col">Coupon</th>
                                 <th class="text-uppercase" scope="col">Who added</th>
@@ -32,11 +33,12 @@
                         <tbody>
                             <tr ng-repeat="redeem in prizeHistory.redeems">
                                 <th scope="row">{{ $index + 1}}.</th>
-                                <td>{{ redeem.customer.name }} ({{ redeem.customer.coupon }})</td>
+                                <td>{{ redeem.customer.name }}</td>
                                 <td>{{ redeem.customer.mobileNumber }}</td>
                                 <th>
                                     <img class=" dt-avatar__shadow size-60 mr-sm-4 mb-6" src="/assets/uploads/{{ redeem.signature }}">
                                 </th>
+                                <td>{{ redeem.market.name }}</td>
                                 <td>{{ redeem.customer.address }}</td>
                                 <td style="white-space: pre-line" ng-click="prizeHistory.view(redeem._id);">{{ redeem.prizes.length }} Prizes <a href="#" data-toggle="modal" data-target="#exampleModal">view</a></td>
                                 <td>{{ redeem.author.name }} on {{ redeem.createdAt | date : 'MMM d, y h:mm a'}}</td>
@@ -70,7 +72,7 @@
             </div>
             <div class="modal-body">
                 <ul>
-                    <li ng-repeat="prize in main.currentRedeem[0].prizes"> {{ prize.quantity }} x {{ prize.coupon }} [{{ prize.category }}] - {{ prize.coupons}} Coupons</li>
+                    <li ng-repeat="prize in prizeHistory.currentRedeem[0].prizes"> {{ prize.quantity }} x {{ prize.coupon }} [{{ prize.category }}] - {{ prize.coupons}} Coupons</li>
                 </ul>
             </div>
             <div class="modal-footer">

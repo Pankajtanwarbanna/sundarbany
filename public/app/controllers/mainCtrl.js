@@ -32,8 +32,19 @@ angular.module('mainController', ['authServices'])
                 app.loadme = true;
                 app.authorized = (data.data.role === 'SUPER-ADMIN');
 
-                user.getRedeems('?status=CREATED').then((data) => {
+                user.getRedeems('').then((data) => {
                     app.redeems = data.data.response.data;
+                    app.todays = 0;
+                    app.open = 0;
+                    app.total = app.redeems.length;
+                    app.prizes = 0;
+
+                    app.redeems.forEach((redeem) => {
+                        if(redeem.status === 'CREATED') {
+                            app.open += 1;
+                            app.prizes += redeem.prizes.length;
+                        }
+                    })
                 }).catch((error) => {
                     app.redeems = [];
                 })

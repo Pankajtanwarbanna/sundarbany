@@ -364,6 +364,114 @@
                                         <!-- Grid -->
                                         <div class="row">
 
+                                            <div class="col-xl-12 col-12 order-xl-2">
+
+                                                <!-- Grid -->
+                                                <div class="row">
+                                                    <!-- Grid Item -->
+                                                    <div class="col-sm-3">
+                                                        <!-- Card -->
+                                                        <div class="dt-card">
+                                        
+                                                            <!-- Card Body -->
+                                                            <div class="dt-card__body d-flex flex-sm-column">
+                                                                <div class="mb-sm-7 mr-7 mr-sm-0">
+                                                                    <i class="icon icon-users dt-icon-bg bg-primary text-primary"></i>
+                                                                </div>
+                                                                <div class="flex-1">
+                                                                    <div class="d-flex align-items-center mb-2">
+                                                                        <span class="h2 mb-0 font-weight-500 mr-2">{{ main.todays }}</span>
+                                                                    </div>
+                                                                    <div class="h5 mb-2">Today's Requests</div>
+                                                                    <p class="card-text text-light-gray f-12">Last update just now</p>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /card body -->
+                                        
+                                                        </div>
+                                                        <!-- /card -->
+                                                    </div>
+                                                    <!-- /grid item -->
+                                        
+                                                    <!-- Grid Item -->
+                                                    <div class="col-sm-3">
+                                                        <!-- Card -->
+                                                        <div class="dt-card">
+                                        
+                                                            <!-- Card Body -->
+                                                            <div class="dt-card__body d-flex flex-sm-column">
+                                                                <div class="mb-sm-7 mr-7 mr-sm-0">
+                                                                    <i class="icon icon-company dt-icon-bg bg-success text-success"></i>
+                                                                </div>
+                                                                <div class="flex-1">
+                                                                    <div class="d-flex align-items-center mb-2">
+                                                                        <span class="h2 mb-0 font-weight-500 mr-2">{{ main.open }}</span>
+                                                                    </div>
+                                                                    <div class="h5 mb-2">Open Requests</div>
+                                                                    <p class="card-text text-light-gray f-12">update just now</p>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /card body -->
+                                        
+                                                        </div>
+                                                        <!-- /card -->
+                                                    </div>
+                                                    <!-- /grid item -->
+                                        
+                                                    <!-- Grid Item -->
+                                                    <div class="col-sm-3">
+                                                        <!-- Card -->
+                                                        <div class="dt-card">
+                                        
+                                                            <!-- Card Body -->
+                                                            <div class="dt-card__body d-flex flex-sm-column">
+                                                                <div class="mb-sm-7 mr-7 mr-sm-0">
+                                                                    <i class="icon icon-customer dt-icon-bg bg-secondary text-secondary"></i>
+                                                                </div>
+                                                                <div class="flex-1">
+                                                                    <div class="d-flex align-items-center mb-2">
+                                                                        <span class="h2 mb-0 font-weight-500 mr-2">{{ main.total }}</span>
+                                                                    </div>
+                                                                    <div class="h5 mb-2">Total Redeem Requests</div>
+                                                                    <p class="card-text text-light-gray f-12">Just updated</p>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /card body -->
+                                        
+                                                        </div>
+                                                        <!-- /card -->
+                                                    </div>
+                                                    <!-- /grid item -->
+                                        
+                                                    <!-- Grid Item -->
+                                                    <div class="col-sm-3">
+                                                        <!-- Card -->
+                                                        <div class="dt-card">
+                                        
+                                                            <!-- Card Body -->
+                                                            <div class="dt-card__body d-flex flex-sm-column">
+                                                                <div class="mb-sm-7 mr-7 mr-sm-0">
+                                                                    <i class="icon icon-revenue-new dt-icon-bg bg-orange text-orange"></i>
+                                                                </div>
+                                                                <div class="flex-1">
+                                                                    <div class="d-flex align-items-center mb-2">
+                                                                        <span class="h2 mb-0 font-weight-500 mr-2">{{ main.prizes }}</span>
+                                                                    </div>
+                                                                    <div class="h5 mb-2">Total Prizes</div>
+                                                                    <p class="card-text text-light-gray f-12">just updated</p>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /card body -->
+                                        
+                                                        </div>
+                                                        <!-- /card -->
+                                                    </div>
+                                                    <!-- /grid item -->
+                                                </div>
+                                                <!-- /grid -->
+                                        
+                                            </div>
+
                                             <!-- Grid Item -->
                                             <div class="col-xl-12 order-xl-2">
 
@@ -384,6 +492,7 @@
                                                                         <th class="text-uppercase" scope="col">Name</th>
                                                                         <th class="text-uppercase" scope="col">Mobile Number</th>
                                                                         <th class="text-uppercase" scope="col">Signature</th>
+                                                                        <th class="text-uppercase" scope="col">Market</th>
                                                                         <th class="text-uppercase" scope="col">Address</th>
                                                                         <th class="text-uppercase" scope="col">Coupon</th>
                                                                         <th class="text-uppercase" scope="col">Who added</th>
@@ -391,13 +500,14 @@
                                                                     </thead>
                                                                     <tbody>
 
-                                                                    <tr ng-repeat="redeem in main.redeems">
+                                                                    <tr ng-repeat="redeem in main.redeems | filter : { status : 'CREATED'}">
                                                                         <th scope="row">{{ $index + 1}}.</th>
-                                                                        <td>{{ redeem.customer.name }} ({{ redeem.customer.coupon }})</td>
+                                                                        <td>{{ redeem.customer.name }} </td>
                                                                         <td>{{ redeem.customer.mobileNumber }}</td>
                                                                         <th>
                                                                             <img class=" dt-avatar__shadow size-60 mr-sm-4 mb-6" src="/assets/uploads/{{ redeem.signature }}">
                                                                         </th>
+                                                                        <td>{{ redeem.market.name }}</td>
                                                                         <td>{{ redeem.customer.address }}</td>
                                                                         <td style="white-space: pre-line" ng-click="main.check(redeem._id);">{{ redeem.prizes.length }} Prizes <br><a href="#" data-toggle="modal" data-target="#exampleModal">view</a></td>
                                                                         <td>{{ redeem.author.name }} on {{ redeem.createdAt | date : 'MMM d, y h:mm a'}}</td>

@@ -38,6 +38,17 @@ exports.getRedeem           = (query, callback) => {
         },
         {
             $lookup         : {
+                from        : 'markets',
+                localField  : 'customer.marketId',
+                foreignField: '_id',
+                as          : 'market'
+            }
+        },
+        {
+            $unwind         : '$market'
+        },
+        {
+            $lookup         : {
                 from        : 'users',
                 localField  : 'author',
                 foreignField: '_id',
@@ -50,6 +61,7 @@ exports.getRedeem           = (query, callback) => {
     ]
     Redeem.aggregate(pipeline).exec((error, result) => {
         if(error) {
+            console.log(error)
             return callback(errorHelper.findMongoError(error))
         }
         return callback(null, result);

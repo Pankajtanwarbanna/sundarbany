@@ -20,6 +20,7 @@
                     </span>
                 </form>
                 <p class="text-danger">{{ redeem.errorMsg }}</p>
+                <p class="text-primary">{{ redeem.searchingCustomer }}</p>
 
                 <!-- /search box -->
                 <button class="btn btn-primary" type="button" ng-click="redeem.search();">Search Customer Now</button>
@@ -59,7 +60,7 @@
         <div class="card-header card-nav border-bottom-0">
             <div class="d-flex align-items-center justify-content-between mt-4">
                 <h1>{{ redeem.customer.name }} </h1>
-                <p class="text-primary">{{ redeem.customer.coupon}} coupons.</p>
+                <p class="text-primary">{{ redeem.customer.prizes.length }} prizes.</p>
             </div>
 
             <div class="col-xl-12">
@@ -82,11 +83,11 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="prize in redeem.prizeData">
+                                <tr ng-repeat="prize in redeem.customer.prizes">
                                     <th scope="row">{{ $index + 1}}.</th>
-                                    <td>{{ prize.category | prizeFilter : prize.category }}</td>
-                                    <td>{{ prize.prize | prizeFilter : prize.prize }}</td>
-                                    <td>{{ prize.prize | quantityFilter: prize.prize }} {{ prize.quantity }}</td>
+                                    <td>{{ prize.category }}</td>
+                                    <td>{{ prize.coupon }}</td>
+                                    <td>{{ prize.coupons }} Coupons <span class="text-danger">({{ prize.coupons - (prize.quantity * prize.cost) }} Coupons left )</span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -101,31 +102,31 @@
                 <!-- /card -->
 
                 <!-- Select Prize -->
-                <div class="form-row" ng-repeat="prize in [] | range : redeem.total" ng-init="prizeIndex = $index">
+                <h3>Redeem</h3>
 
+                <div class="form-row" ng-repeat="prize in redeem.customer.prizes">
                     <div class="col-sm-4 mb-3">
                         <label>Coupon Category</label>
-                        <select class="form-control" id="simple-select" ng-model="redeem.prizeData[prizeIndex].category" ng-change="selectedCategory(redeem.prizeData[prizeIndex].category, prizeIndex);" required>
+                        <select class="form-control" id="simple-select" ng-model="prize.categoryId" ng-change="selectedCategory(redeem.prizeData[prizeIndex].category, prizeIndex);" required>
                             <option value="">-- Select Coupon Category --</option>
-                            <option ng-repeat="category in redeem.coupons" value="{{ category }}">{{ category.name }}</option>
+                            <option ng-repeat="category in redeem.coupons" value="{{ category._id }}">{{ category.name }}</option>
                         </select>
                     </div>
 
                     <div class="col-sm-4 mb-3">
                         <label>Prize</label>
-                        <select class="form-control" id="simple-select" ng-model="redeem.prizeData[prizeIndex].prize" required>
+                        <select class="form-control" id="simple-select" ng-model="prize.couponId" required>
                             <option value="">-- Select Prize --</option>
-                            <option ng-repeat="prize in redeem.prizes[prizeIndex].coupons" value="{{ prize }}">{{ prize.name }} - {{ prize.coupon }} Coupons</option>
+                            <option ng-repeat="prize in redeem.couponsWithCategory[prize.categoryId].coupons" value="{{ prize._id }}">{{ prize.name }} - {{ prize.coupon }} Coupons</option>
                         </select>
                     </div>
 
                     <div class="col-sm-4 mb-3">
                         <label>Coupon Quantity</label>
-                        <input class="form-control" type="number" name="coupon" placeholder="Enter coupon Quantity" ng-model="redeem.prizeData[prizeIndex].quantity" required>
+                        <input class="form-control" type="number" name="coupon" placeholder="Enter coupon Quantity" ng-model="prize.quantity" required>
                     </div>
                 </div>
 
-                <button class="btn btn-primary" type="button" ng-click="redeem.addRedeem();">Add prize</button>
             </div>
         </div>
 
@@ -138,6 +139,10 @@
     </div>
     <p class="text-danger">{{ redeem. redeemErrorMsg}} </p>
 
+    <div class="alert alert-primary" role="alert" ng-show="redeem.loading && !redeem.redeemErrorMsg && !redeem.successMsg">
+        <h4 class="alert-heading">Please wait!</h4>
+        <p> Adding redeem request... Please wait!</p>
+    </div>
     <button class="btn btn-success" type="button" ng-click="redeem.redeem();">Create Coupon Request</button>
 
 </div>

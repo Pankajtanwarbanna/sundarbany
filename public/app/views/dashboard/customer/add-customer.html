@@ -10,42 +10,132 @@
             <!-- Card Body -->
             <div class="dt-card__body">
                 <!-- Form -->
-                <form ng-submit="addCustomer.addNewCustomer(customerData);" class="mb-6" ng-show="!addCustomer.successMsg">
+                <form ng-submit="addCustomer.addNewCustomer(customerData);" class="mb-6"
+                    ng-show="!addCustomer.successMsg">
                     <div class="form-row">
                         <div class="col-sm-6 mb-3">
-                            <label>Customer Name  </label>
-                            <input class="form-control" type="text" name="name" placeholder="Enter Customer Name" ng-model="addCustomer.customerData.name" required>
+                            <label>Customer Name </label>
+                            <input class="form-control" type="text" name="name" placeholder="Enter Customer Name"
+                                ng-model="addCustomer.customerData.name" required>
                         </div>
 
                         <div class="col-sm-6 mb-3">
-                            <label>Mobile Number  </label>
-                            <input class="form-control" type="number" name="mobile" placeholder="Enter Mobile Number" ng-model="addCustomer.customerData.mobileNumber" required>
+                            <label>Mobile Number </label>
+                            <input class="form-control" type="number" name="mobile" placeholder="Enter Mobile Number"
+                                ng-model="addCustomer.customerData.mobileNumber" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-sm-12 mb-3">
-                            <label>Address  </label>
-                            <textarea class="form-control" rows="5" name="address" placeholder="Enter address" ng-model="addCustomer.customerData.address" required></textarea>
-                        </div>
-
-                        <div class="col-sm-6 mb-3">
-                            <label>Market</label>
-                            <select class="form-control" id="simple-select" ng-model="addCustomer.customerData.marketId" required>
-                                <option value="">-- Select Market --</option>
-                                <option ng-repeat="market in addCustomer.markets" value="{{ market._id }}">{{ market.name }}</option>
-                            </select>
-                        </div>
-     
-
-                        <div class="col-sm-6 mb-3">
-                            <label>Coupon Amount</label>
-                            <input class="form-control" type="number" name="coupon" placeholder="Enter coupon amount" ng-model="addCustomer.customerData.coupon" required>
+                            <label>Address </label>
+                            <textarea class="form-control" rows="5" name="address" placeholder="Enter address"
+                                ng-model="addCustomer.customerData.address" required></textarea>
                         </div>
 
                         <div class="col-sm-12 mb-3">
-                            <label>Upload Profile Picture </label>
-                            <input class="form-control" type="file" file-model="file.thumbnail" name="thumbnail" required>
+                            <label>Market</label>
+                            <select class="form-control" id="simple-select" ng-model="addCustomer.customerData.marketId"
+                                required>
+                                <option value="">-- Select Market --</option>
+                                <option ng-repeat="market in addCustomer.markets" value="{{ market._id }}">
+                                    {{ market.name }}</option>
+                            </select>
                         </div>
+
+
+                        <div class="col-sm-12 mb-3">
+                            <label>Upload Profile Picture </label>
+                            <input class="form-control" type="file" file-model="file.thumbnail" name="thumbnail"
+                                required>
+                        </div>
+                    </div>
+
+                    <!-- Card -->
+                    <div class="card">
+
+                        <!-- Card header -->
+                        <div class="card-header card-nav border-bottom-0">
+                            <div class="col-xl-12">
+
+                                <!-- Card -->
+                                <div class="dt-card overflow-hidden">
+
+                                    <!-- Card Body -->
+                                    <div class="dt-card__body p-0">
+
+                                        <!-- Tables -->
+                                        <div class="table-responsive">
+                                            <table class="table table-hover mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th class="text-uppercase" scope="col">Category</th>
+                                                        <th class="text-uppercase" scope="col">Prize Name</th>
+                                                        <th class="text-uppercase" scope="col">Coupons</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="prize in addCustomer.prizeData">
+                                                        <th scope="row">{{ $index + 1}}.</th>
+                                                        <td>{{ prize.category | prizeFilter : prize.category }}</td>
+                                                        <td>{{ prize.prize | prizeFilter : prize.prize }}</td>
+                                                        <td>{{ prize.prize | quantityFilter: prize.prize }}
+                                                            {{ prize.quantity }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /tables -->
+
+                                    </div>
+
+                                    <!-- /card body -->
+
+                                </div>
+                                <!-- /card -->
+
+                                <!-- Select Prize -->
+                                <div class="form-row" ng-repeat="prize in [] | range : addCustomer.total"
+                                    ng-init="prizeIndex = $index">
+
+                                    <div class="col-sm-4 mb-3">
+                                        <label>Coupon Category</label>
+                                        <select class="form-control" id="simple-select"
+                                            ng-model="addCustomer.prizeData[prizeIndex].category"
+                                            ng-change="selectedCategory(addCustomer.prizeData[prizeIndex].category, prizeIndex);"
+                                            required>
+                                            <option value="">-- Select Coupon Category --</option>
+                                            <option ng-repeat="category in addCustomer.coupons" value="{{ category }}">
+                                                {{ category.name }}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-4 mb-3">
+                                        <label>Prize</label>
+                                        <select class="form-control" id="simple-select"
+                                            ng-model="addCustomer.prizeData[prizeIndex].prize" required>
+                                            <option value="">-- Select Prize --</option>
+                                            <option ng-repeat="prize in addCustomer.prizes[prizeIndex].coupons"
+                                                value="{{ prize }}">{{ prize.name }} - {{ prize.coupon }} Coupons
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-4 mb-3">
+                                        <label>Coupon Quantity</label>
+                                        <input class="form-control" type="number" name="coupon"
+                                            placeholder="Enter coupon Quantity"
+                                            ng-model="addCustomer.prizeData[prizeIndex].quantity" required>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-primary" type="button" ng-click="addCustomer.addRedeem();">Add
+                                    prize</button>
+                            </div>
+                        </div>
+
+                        <!-- /card header -->
+
                     </div>
 
                     <button class="btn btn-primary" type="submit">Add Customer Now</button>
@@ -66,13 +156,12 @@
                     <h4 class="alert-heading">Oops!</h4>
                     <p>{{ addCustomer.errorMsg }}</p>
 
+                </div>
+                <!-- /card body -->
+
             </div>
-            <!-- /card body -->
-
+            <!-- /card -->
         </div>
-        <!-- /card -->
+        <!-- /grid item -->
     </div>
-    <!-- /grid item -->
-</div>
-<!-- /grid -->
-
+    <!-- /grid -->
