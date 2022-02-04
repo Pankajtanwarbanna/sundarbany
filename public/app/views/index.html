@@ -560,9 +560,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <ul>
-                        <li ng-repeat="prize in main.currentRedeem[0].prizes"> {{ prize.selected_quantity }} Coupons : {{ prize.coupon }} [{{ prize.category }}]</li>
-                    </ul>
+                    <div ng-repeat="data in main.currentRedeem[0].prizes">
+                        <p><b>{{ data.category }}</b>  </p>
+                        <ul>
+                            <li ng-repeat="prize in data.coupons"> {{ prize.selected_quantity }} Prizes : {{ prize.coupon }} [{{prize.cost }} Coupons per prize]</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

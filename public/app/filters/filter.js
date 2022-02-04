@@ -30,3 +30,17 @@ var app = angular.module('userFilters', [])
         return output;
     };
 })
+
+.filter('leftQuantity', function() {
+    return function(input, total) {
+        let total_coupons = input.quantity;
+
+        Object.values(input.coupons || {}).forEach((coupon) => {
+            console.log(coupon)
+            if(coupon.coupon && coupon.selected_quantity) {
+                total_coupons -= JSON.parse(coupon.coupon).coupon * coupon.selected_quantity;
+            }
+        })
+        return total_coupons;
+    };
+})

@@ -85,7 +85,7 @@
                                 <tr ng-repeat="prize in redeem.customer.prizes">
                                     <th scope="row">{{ $index + 1}}.</th>
                                     <td>{{ prize.category }}</td>
-                                    <td>{{ prize.quantity }} Coupons <span class="text-danger">({{ prize.quantity - prize.selected_quantity }} coupon left)</span></td>
+                                    <td>{{ prize.quantity }} Coupons <span class="text-danger">({{ prize | leftQuantity : prize }} coupon left)</span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -103,25 +103,31 @@
                 <h3>Redeem</h3>
 
                 <div class="form-row" ng-repeat="prize in redeem.customer.prizes">
-                    <div class="col-sm-4 mb-3">
-                        <label>Coupon Category</label>
+                    <div class="col-sm-12 mb-3">
+                        <label>Coupon Category - {{ $index + 1 }}</label>
                         <select class="form-control" id="simple-select" ng-model="prize.categoryId" ng-change="selectedCategory(redeem.prizeData[prizeIndex].category, prizeIndex);" required disabled>
                             <option value="">-- Select Coupon Category --</option>
                             <option ng-repeat="category in redeem.coupons" value="{{ category._id }}">{{ category.name }}</option>
                         </select>
                     </div>
 
-                    <div class="col-sm-4 mb-3">
-                        <label>Prize</label>
-                        <select class="form-control" id="simple-select" ng-model="prize.couponId" required>
-                            <option value="">-- Select Prize --</option>
-                            <option ng-repeat="prize in redeem.couponsWithCategory[prize.categoryId].coupons" value="{{ prize._id }}">{{ prize.name }} - {{ prize.coupon }} Coupons</option>
-                        </select>
+                    <div class="col-sm-12 mb-3 form-row" ng-repeat="coupon in prize.coupons" ng-init="couponIndex = $index">
+                        <div class="col-sm-6 mb-3">
+                            <label>Prize</label>
+                            <select class="form-control" id="simple-select" ng-model="prize.coupons[couponIndex].coupon" required>
+                                <option value="">-- Select Prize --</option>
+                                <option ng-repeat="prize in redeem.couponsWithCategory[prize.categoryId].coupons" value="{{ prize }}">{{ prize.name }} - {{ prize.coupon }} Coupons</option>
+                            </select>
+                        </div>
+    
+                        <div class="col-sm-6 mb-3">
+                            <label>Prize Quantity</label>
+                            <input class="form-control" type="number" name="coupon" placeholder="Enter coupon Quantity" ng-model="prize.coupons[couponIndex].selected_quantity" required>
+                        </div>
                     </div>
-
-                    <div class="col-sm-4 mb-3">
-                        <label>Coupon Quantity</label>
-                        <input class="form-control" type="number" name="coupon" placeholder="Enter coupon Quantity" ng-model="prize.selected_quantity" required>
+                    <div class="col-sm-12 mb-3 text-center">
+                        <button class="btn btn-primary" type="button" ng-click="redeem.addGiftCoupon(prize.categoryId);">Gift Coupon</button>
+                        <p class=" text-primary">---------------------</p>
                     </div>
                 </div>
 

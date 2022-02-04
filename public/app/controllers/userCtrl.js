@@ -326,6 +326,28 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
         app.prizes[prizeIndex] = prizes[0];
     }
 
+    // add gift coupon
+    app.addGiftCoupon   = (category) => {
+        app.customer.prizes.forEach((prize) => {
+            if(prize.categoryId === category) {
+                if(prize.coupons) {
+                    let size = Object.keys(prize.coupons).length;
+                    prize.coupons[size] = {
+                        'coupon' : null,
+                        'selected_quantity' : null
+                    }
+                } else {
+                    prize.coupons = {
+                        '0' : {
+                            'coupon' : null,
+                            'selected_quantity' : null    
+                        }
+                    }
+                }
+            }
+        })
+    }
+
     // redeem
     app.redeem  = () => {
         app.redeemErrorMsg = '';
@@ -334,24 +356,54 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
 
         if(app.file) {
             if(app.customer.prizes) {
+                console.log(app.customer.prizes)
+                // check if quantity exceeded
                 app.customer.prizes.forEach((prize) => {
-                    if(prize.selected_quantity > prize.quantity) {
+                    let total_given_coupons = 0;
+                    if(!prize.coupons) prize.coupons = {}
+                    Object.values(prize.coupons).forEach((coupon) => {
+                        if(coupon.coupon && coupon.selected_quantity) {
+                            total_given_coupons += JSON.parse(coupon.coupon).coupon * coupon.selected_quantity;
+                        }
+                    })
+
+                    if(total_given_coupons > prize.quantity) {
                         app.redeemErrorMsg = 'Coupon value exceeded. Please check.'
                     }
                 })
-                // filter empty data
-                let prizes = app.customer.prizes.filter((prize) => {
-                    return prize.couponId && prize.selected_quantity;
-                })
 
-                // add coupon name 
-                prizes = prizes.map((prize) => {
-                    let coupons = app.couponsWithCategory[prize.categoryId].coupons.filter((category) => {
-                        return category._id === prize.couponId;
-                    });
-                    return { ...prize, 'coupon' : coupons[0].name }
-                })
                 if(!app.redeemErrorMsg) {
+                    // filter empty data
+                    let prizes = app.customer.prizes.filter((prize) => {
+                        return prize.coupons;
+                    })
+
+                    prizes.forEach((prize) => {
+                        let allCoupons = {};
+
+                        Object.values(prize.coupons || {}).forEach((coupon) => {
+                            couponData = JSON.parse(coupon.coupon);
+                            if(couponData && coupon.selected_quantity) {
+                                if(allCoupons[couponData._id]) {
+                                    allCoupons[couponData._id].selected_quantity  += coupon.selected_quantity;
+                                } else {
+                                    allCoupons[couponData._id] = {
+                                        selected_quantity  : coupon.selected_quantity,
+                                        couponId  : couponData._id,
+                                        coupon  : couponData.name,
+                                        cost : couponData.coupon
+                                    }
+                                }
+                            }
+                        })
+                        prize.coupons = Object.values(allCoupons);
+                    })
+
+                    // filter empty data
+                    prizes = app.customer.prizes.filter((prize) => {
+                        return prize.coupons.length > 0;
+                    })
+
                     uploadFile.uploadImage(app.file).then(function (data) {
                         if(data.data.success) {
                             user.redeem({
@@ -361,7 +413,7 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
                             }).then((data) => {
                                 app.successMsg = 'Coupon redeem request created.'
                             }).catch((error) => {
-                                app.redeemErrorMsg = 'Something went wrong, please try again later.'
+                                app.redeemErrorMsg = 'Something went wrong, refresh and please try again later.'
                             })
                         }
                     });

@@ -102,12 +102,15 @@ exports.redeemDone      = (req, res) => {
                         })
     
                         if(underscore.isEmpty(redeem) === false) {
-                            if(redeem[0].selected_quantity > (prize.quantity)) {
+                            let totalCoupons    = 0;
+                            redeem[0].coupons.forEach((coupon) => {
+                                totalCoupons   += coupon.cost * coupon.selected_quantity;
+                            });
+
+                            if(totalCoupons > prize.quantity) {
                                 isRedeemValid   = false;
                             } else {
-                                prize.quantity  -= redeem[0].selected_quantity;
-                                prize.coupon     = redeem[0].coupon;
-                                prize.couponId   = redeem[0].couponId;
+                                prize.quantity  -= totalCoupons;
                             }
                         }
                     })

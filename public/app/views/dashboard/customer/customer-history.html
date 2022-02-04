@@ -115,9 +115,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                <ul>
-                    <li ng-repeat="prize in customerHistory.current"> {{ prize.selected_quantity || prize.quantity }} Coupons : {{ prize.coupon }} [{{ prize.category }}]</li>
-                </ul>
+                <div ng-repeat="data in customerHistory.current">
+                    <p><b>{{ data.category }}</b> <span class="text-primary" ng-if="!data.coupons">({{ data.quantity }} available)</span></p>
+                    <ul>
+                        <li ng-repeat="prize in data.coupons"> {{ prize.selected_quantity }} Prizes : {{ prize.coupon }} [{{prize.cost }} Coupons per prize]</li>
+                    </ul>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
