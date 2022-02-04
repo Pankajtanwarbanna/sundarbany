@@ -55,8 +55,6 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
         const data = coupons.filter((coupon) => {
             if(coupon.categoryId === category) return coupon.coupons;
         });
-        console.log(coupons, category)
-        console.log(data)
         return data;
     }
 
@@ -66,7 +64,6 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
         app.loading = true;
 
         if(app.prizeData) {
-            console.log(app.prizeData)
             const prizes = Object.values(app.prizeData).map((prize) => {
                 if(prize.category) {
                     return {
@@ -85,7 +82,7 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
                     prizeValues[val.categoryId] = val;
                 }
             })
-            console.log(prizeValues)
+
             uploadFile.uploadImage($scope.file).then(function (data) {
                 if(data.data.success) {
                     app.customerData.profile_pic = data.data.filename;
@@ -119,6 +116,28 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
         app.errorMsg = 'Something went wrong, please try again later.'
     })
 
+    // add redeem prize
+    app.giftCoupon = () => {
+        if(app.customer.prizes) {
+            app.customer.prizes.push({
+                'category' : null,
+                'quantity' : null
+            })
+        } else {
+            app.customer.prizes = [{
+                'category' : null,
+                'quantity' : null
+            }]
+        }
+    }
+
+    // get all coupons 
+    user.getCoupons().then(function (data) {
+        app.coupons = data.data.response.data;
+    }).catch((error) => {
+        app.errorMsg = 'Something went wrong, please try again later.'
+    })
+
     // get customer
     user.getCustomer({ customerId : $routeParams.customerId }).then(function (data) {
         app.customer = data.data.response.data[0];
@@ -132,13 +151,46 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
     app.updateCustomer = function (customer) {
         app.errorMsg = '';
         app.loading = true;
-        user.updateCustomer($routeParams.customerId, app.customer).then(function (data) {
-            app.successMsg = 'Customer has been updated.';
-            app.loading = false;
-        }).catch((error) => {
-            app.errorMsg = error.data.response.message;
-            app.loading = false;
+
+        // dont allow multiple categories
+        let prizesData = {};
+        app.customer.prizes.forEach((val) => {
+            if(prizesData[val.categoryId]) {
+                app.errorMsg = 'You can not select a category twice.';
+                app.loading = false;
+            } else {
+                prizesData[val.categoryId] = val;
+            }
         })
+
+        if(!app.errorMsg) {
+            // format the data
+            app.customer.prizes.forEach((prize) => {
+                app.coupons.forEach((coupon) => {
+                    if(coupon._id === prize.categoryId) {
+                        prize.category = coupon.name;
+                    }
+                })
+            })
+
+            let prizeValues = {};
+            app.customer.prizes.forEach((val) => {
+                if(prizeValues[val.categoryId]) {
+                    prizeValues[val.categoryId]['quantity'] += val.quantity;
+                } else {
+                    prizeValues[val.categoryId] = val;
+                }
+            })
+
+            app.customer.prizes = Object.values(prizeValues);
+            user.updateCustomer($routeParams.customerId, app.customer).then(function (data) {
+                app.successMsg = 'Customer has been updated.';
+                app.loading = false;
+            }).catch((error) => {
+                app.errorMsg = error.data.response.message;
+                app.loading = false;
+            })
+        }
     };
 })
 
@@ -451,7 +503,35 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
 
     // get customer history
     user.getHistory({ customerId : $routeParams.customerId }).then((data) => {
-        app.customer = data.data.response.data[0];
+        app.customer        = data.data.response.data[0];
+        app.total_prizes    = 0;
+        app.all_prizes      = {};
+
+        app.customer.history.forEach((data) => {
+            data.prizes.forEach((prize) => {
+
+                if(!app.all_prizes[prize.categoryId]) {
+                    app.all_prizes[prize.categoryId] = {
+                        'category'      : prize.category,
+                        'coupons'       : {}
+                    };
+                } 
+
+                // total coupons 
+                prize.coupons.forEach((coupon) => {
+                    app.total_prizes += coupon.selected_quantity;
+                    if(app.all_prizes[prize.categoryId]['coupons'][coupon.couponId]) {
+                        app.all_prizes[prize.categoryId][coupon.couponId].selected_quantity += coupon.selected_quantity;
+                    } else {
+                        app.all_prizes[prize.categoryId]['coupons'][coupon.couponId] = {
+                            'coupon'            : coupon.coupon,
+                            'selected_quantity' : coupon.selected_quantity
+                        }
+                    }
+                })
+            })
+        })
+        console.log(app.all_prizes)
     }).catch((error) => {
         app.customer = {};
     })

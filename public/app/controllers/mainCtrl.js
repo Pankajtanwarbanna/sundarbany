@@ -33,16 +33,16 @@ angular.module('mainController', ['authServices'])
                 app.authorized = (data.data.role === 'SUPER-ADMIN');
 
                 user.getRedeems('').then((data) => {
-                    app.redeems = data.data.response.data;
-                    app.todays = 0;
-                    app.open = 0;
-                    app.total = app.redeems.length;
-                    app.prizes = 0;
+                    app.redeems         = data.data.response.data;
+                    app.todays          = 0;
+                    app.open            = 0;
+                    app.total           = app.redeems.length;
+                    app.prizes          = 0;
+                    app.all_prizes      = {};
 
                     app.redeems.forEach((redeem) => {
                         if(redeem.status === 'CREATED') {
                             app.open += 1;
-                            app.prizes += redeem.prizes.length;
                             let redeemDate = new Date(redeem.createdAt);
                             let today = new Date();
                             if(redeemDate.getDate() == today.getDate() && redeemDate.getMonth() == today.getMonth() && redeemDate.getFullYear() == today.getFullYear()) {
@@ -50,6 +50,29 @@ angular.module('mainController', ['authServices'])
                             }
 
                         }
+
+                        redeem.prizes.forEach((prize) => {
+                
+                            if(!app.all_prizes[prize.categoryId]) {
+                                app.all_prizes[prize.categoryId] = {
+                                    'category'      : prize.category,
+                                    'coupons'       : {}
+                                };
+                            } 
+            
+                            // total coupons 
+                            prize.coupons.forEach((coupon) => {
+                                app.prizes      += coupon.selected_quantity;
+                                if(app.all_prizes[prize.categoryId]['coupons'][coupon.couponId]) {
+                                    app.all_prizes[prize.categoryId][coupon.couponId].selected_quantity += coupon.selected_quantity;
+                                } else {
+                                    app.all_prizes[prize.categoryId]['coupons'][coupon.couponId] = {
+                                        'coupon'            : coupon.coupon,
+                                        'selected_quantity' : coupon.selected_quantity
+                                    }
+                                }
+                            })
+                        })
                     })
                 }).catch((error) => {
                     app.redeems = [];

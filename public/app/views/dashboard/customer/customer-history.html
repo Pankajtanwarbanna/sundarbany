@@ -18,7 +18,8 @@
                             <th class="text-uppercase" scope="col">Name</th>
                             <th class="text-uppercase" scope="col">Mobile Number</th>
                             <th class="text-uppercase" scope="col">Address</th>
-                            <th class="text-uppercase" scope="col">Coupon</th>
+                            <th class="text-uppercase" scope="col">Available Coupons</th>
+                            <th class="text-uppercase" scope="col">Total Prizes</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -31,6 +32,7 @@
                             <td>+91 {{ customerHistory.customer.mobileNumber }}</td>
                             <td>{{ customerHistory.customer.address }}</td>
                             <td style="white-space: pre-line" ng-click="customerHistory.view(customerHistory.customer.prizes);">{{ customerHistory.customer.prizes.length }} Prizes <a href="#" data-toggle="modal" data-target="#exampleModal">view</a></td>
+                            <td style="white-space: pre-line">{{ customerHistory.total_prizes }} Prizes <a href="#" data-toggle="modal" data-target="#allPrizesModal">view</a></td>
                         </tr>
                         </tbody>
                     </table>
@@ -109,7 +111,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Total Prizes</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Available Coupons</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -119,6 +121,31 @@
                     <p><b>{{ data.category }}</b> <span class="text-primary" ng-if="!data.coupons">({{ data.quantity }} available)</span></p>
                     <ul>
                         <li ng-repeat="prize in data.coupons"> {{ prize.selected_quantity }} Prizes : {{ prize.coupon }} [{{prize.cost }} Coupons per prize]</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="allPrizesModal" tabindex="-1" role="dialog" aria-labelledby="allPrizesModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Total Prizes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div ng-repeat="data in (customerHistory.all_prizes)">
+                    <p><b>{{ data.category }}</b> </p>
+                    <ul>
+                        <li ng-repeat="prize in data.coupons"> {{ prize.selected_quantity }} Prizes : {{ prize.coupon }}</li>
                     </ul>
                 </div>
             </div>

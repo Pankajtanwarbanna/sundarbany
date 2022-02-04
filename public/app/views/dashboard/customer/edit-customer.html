@@ -28,7 +28,7 @@
                             <textarea class="form-control" rows="5" name="address" placeholder="Enter address" ng-model="editCustomer.customer.address" required></textarea>
                         </div>
 
-                        <div class="col-sm-6 mb-3">
+                        <div class="col-sm-12 mb-3">
                             <label>Market</label>
                             <select class="form-control" id="simple-select" ng-model="editCustomer.customer.marketId" required>
                                 <option value="">-- Select Market --</option>
@@ -36,13 +36,32 @@
                             </select>
                         </div>
 
-                        <div class="col-sm-6 mb-3">
-                            <label>Coupon Amount</label>
-                            <input class="form-control" type="number" name="coupon" placeholder="Enter coupon amount" ng-model="editCustomer.customer.coupon" required>
+                        <div class="col-sm-12 mb-3 form-row" ng-repeat="prize in [] | range : editCustomer.customer.prizes.length"
+                            ng-init="prizeIndex = $index">
+
+                            <div class="col-sm-6 mb-3">
+                                <label>Coupon Category</label>
+                                <select class="form-control" id="simple-select"
+                                    ng-model="editCustomer.customer.prizes[prizeIndex].categoryId"
+                                    required>
+                                    <option value="">-- Select Coupon Category --</option>
+                                    <option ng-repeat="category in editCustomer.coupons" value="{{ category._id }}">
+                                        {{ category.name }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6 mb-3">
+                                <label>Coupon Quantity</label>
+                                <input class="form-control" type="number" name="coupon"
+                                    placeholder="Enter coupon Quantity"
+                                    ng-model="editCustomer.customer.prizes[prizeIndex].quantity" required>
+                            </div>
+
                         </div>
+                        <button class="btn btn-primary mb-3 text-center" type="button" ng-click="editCustomer.giftCoupon();">Add Gift Coupon</button>
                     </div>
 
-                    <button class="btn btn-primary" type="submit">Update Customer Now</button>
+                    <button class="btn btn-success" type="submit">Update Customer Now</button>
                 </form>
                 <!-- /form -->
 
@@ -60,7 +79,7 @@
                     <h4 class="alert-heading">Oops!</h4>
                     <p>{{ editCustomer.errorMsg }}</p>
 
-            </div>
+                </div>
             <!-- /card body -->
 
         </div>
