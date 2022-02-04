@@ -104,15 +104,20 @@ angular.module('mainController', ['authServices'])
     };
 
     this.redeemAction   = (redeemId, action) => {
+        app.loadingAction = true;
         user.redeemAction(redeemId, action).then((data) => {
             app.successMsg = data.data.response.message;
             user.getRedeems('?status=CREATED').then((data) => {
                 app.redeems = data.data.response.data;
+                app.loadingAction = false;
+
             }).catch((error) => {
                 app.redeems = [];
+                app.loadingAction = false;
             })
         }).catch((error) => {
             app.errorMsg = error.data.response.message;
+            app.loadingAction = false;
         })
     }
 

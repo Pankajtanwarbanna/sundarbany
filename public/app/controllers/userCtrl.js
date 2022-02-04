@@ -97,6 +97,8 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
                         app.errorMsg = error.data.response.message;
                         app.loading = false;
                     })
+                } else {
+                    app.errorMsg = data.data.message;
                 }
             });
         } else {
@@ -415,6 +417,8 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
                             }).catch((error) => {
                                 app.redeemErrorMsg = 'Something went wrong, refresh and please try again later.'
                             })
+                        } else {
+                            app.redeemErrorMsg = data.data.message;
                         }
                     });
                 }
