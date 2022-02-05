@@ -521,7 +521,7 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
                 prize.coupons.forEach((coupon) => {
                     app.total_prizes += coupon.selected_quantity;
                     if(app.all_prizes[prize.categoryId]['coupons'][coupon.couponId]) {
-                        app.all_prizes[prize.categoryId][coupon.couponId].selected_quantity += coupon.selected_quantity;
+                        app.all_prizes[prize.categoryId]['coupons'][coupon.couponId].selected_quantity += coupon.selected_quantity;
                     } else {
                         app.all_prizes[prize.categoryId]['coupons'][coupon.couponId] = {
                             'coupon'            : coupon.coupon,
