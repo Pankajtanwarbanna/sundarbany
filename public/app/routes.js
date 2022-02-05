@@ -29,7 +29,7 @@ var app = angular.module('userRoutes', ['ngRoute'])
                 controller : 'editCustomerCtrl',
                 controllerAs : 'editCustomer',
                 authenticated : true,
-                permission : ['ADMIN', 'SUPER-ADMIN']
+                permission : ['SUPER-ADMIN']
             })
 
             .when('/customers', {
