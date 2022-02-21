@@ -26,7 +26,7 @@
                         <tr>
                             <th scope="row">{{ $index + 1}}.</th>
                             <th>
-                                <img class="dt-avatar dt-avatar__shadow size-30 mr-sm-4 mb-6" src="/assets/uploads/{{ customerHistory.customer.profile_pic }}">
+                                <img class="dt-avatar dt-avatar__shadow size-30 mr-sm-4 mb-6" src="{{ customerHistory.customer.profile_pic }}">
                             </th>
                             <td>{{ customerHistory.customer.name }}</td>
                             <td>+91 {{ customerHistory.customer.mobileNumber }}</td>
@@ -83,7 +83,7 @@
                             <tr ng-repeat="redeem in customerHistory.customer.history">
                                 <th scope="row">{{ $index + 1}}.</th>
                                 <th>
-                                    <img class=" dt-avatar__shadow size-60 mr-sm-4 mb-6" src="/assets/uploads/{{ redeem.signature }}">
+                                    <img class=" dt-avatar__shadow size-60 mr-sm-4 mb-6" src="{{ redeem.signature }}">
                                 </th>
                                 <td style="white-space: pre-line" ng-click="customerHistory.view(redeem.prizes);">{{ redeem.prizes.length }} Prizes <a href="#" data-toggle="modal" data-target="#exampleModal">view</a></td>
                                 <td> {{ redeem.createdAt | date : 'MMM d, y h:mm a'}}</td>
