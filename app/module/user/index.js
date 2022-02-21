@@ -9,6 +9,7 @@ const userController    = require(constant.path.module + 'user/user.controller')
 
 const SuperAdminGuard   = Passport.authenticate(['super-admin'], { session : false })
 const UserGuard         = Passport.authenticate(['admin', 'super-admin'], { session : false });
+const multerService     = require(constant.path.service + 'multer.service');
 
 /* User Routes */ 
 router.post(
@@ -45,6 +46,7 @@ router.post(
 // * User Media */
 router.post(
     '/media',
+    multerService.array('thumbnail', 1),
     userController.media
 );
 
