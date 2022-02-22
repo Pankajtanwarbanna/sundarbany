@@ -22,7 +22,7 @@
                                 <th scope="col">#</th>
                                 <th class="text-uppercase" scope="col">Name</th>
                                 <th class="text-uppercase" scope="col">Mobile Number</th>
-                                <th class="text-uppercase" scope="col">Signature</th>
+                                <!-- <th class="text-uppercase" scope="col">Signature</th> -->
                                 <th class="text-uppercase" scope="col">Market</th>
                                 <th class="text-uppercase" scope="col">Address</th>
                                 <th class="text-uppercase" scope="col">Coupon</th>
@@ -35,9 +35,9 @@
                                 <th scope="row">{{ $index + 1}}.</th>
                                 <td>{{ redeem.customer.name }}</td>
                                 <td>{{ redeem.customer.mobileNumber }}</td>
-                                <th>
+                                <!-- <th>
                                     <img class=" dt-avatar__shadow size-60 mr-sm-4 mb-6" src="{{ redeem.signature }}">
-                                </th>
+                                </th> -->
                                 <td>{{ redeem.market.name }}</td>
                                 <td>{{ redeem.customer.address }}</td>
                                 <td style="white-space: pre-line" ng-click="prizeHistory.view(redeem._id);">{{ redeem.prizes.length }} Prizes <a href="#" data-toggle="modal" data-target="#exampleModal">view</a></td>

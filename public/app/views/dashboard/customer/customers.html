@@ -22,7 +22,7 @@
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th class="text-uppercase" scope="col">Avatar</th>
+                            <!-- <th class="text-uppercase" scope="col">Avatar</th> -->
                             <th class="text-uppercase" scope="col">Name</th>
                             <th class="text-uppercase" scope="col">Mobile Number</th>
                             <th class="text-uppercase" scope="col">Address</th>
@@ -33,9 +33,9 @@
                         <tbody>
                         <tr ng-repeat="user in customer.customers">
                             <th scope="row">{{ $index + 1}}.</th>
-                            <th>
+                            <!-- <th>
                                 <img class="dt-avatar dt-avatar__shadow size-30 mr-sm-4 mb-6" src="{{ user.profile_pic }}">
-                            </th>
+                            </th> -->
                             <td>{{ user.name }}</td>
                             <td>+91 {{ user.mobileNumber }}</td>
                             <td>{{ user.address }}</td>

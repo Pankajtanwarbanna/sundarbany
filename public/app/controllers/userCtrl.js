@@ -83,21 +83,30 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
                 }
             })
 
-            uploadFile.uploadImage($scope.file).then(function (data) {
-                if(data.data.success) {
-                    app.customerData.profile_pic = data.data.filename;
-                    app.customerData.prizes = Object.values(prizeValues);
-                    user.addCustomer(app.customerData).then(function (data) {
-                        app.successMsg = 'A new customer has been added.';
-                        app.loading = false;
-                    }).catch((error) => {
-                        app.errorMsg = error.data.response.message;
-                        app.loading = false;
-                    })
-                } else {
-                    app.errorMsg = data.data.message;
-                }
-            });
+            app.customerData.prizes = Object.values(prizeValues);
+            user.addCustomer(app.customerData).then(function (data) {
+                app.successMsg = 'A new customer has been added.';
+                app.loading = false;
+            }).catch((error) => {
+                app.errorMsg = error.data.response.message;
+                app.loading = false;
+            })
+
+            // uploadFile.uploadImage($scope.file).then(function (data) {
+            //     if(data.data.success) {
+            //         app.customerData.profile_pic = data.data.filename;
+            //         app.customerData.prizes = Object.values(prizeValues);
+            //         user.addCustomer(app.customerData).then(function (data) {
+            //             app.successMsg = 'A new customer has been added.';
+            //             app.loading = false;
+            //         }).catch((error) => {
+            //             app.errorMsg = error.data.response.message;
+            //             app.loading = false;
+            //         })
+            //     } else {
+            //         app.errorMsg = data.data.message;
+            //     }
+            // });
         } else {
             app.errorMsg = 'Please select coupon.';
             app.loading = false;
@@ -408,77 +417,82 @@ angular.module('userCtrl',['userServices','fileModelDirective','uploadFileServic
         app.loading = true;
         let total_coupons = 0;
 
-        if(app.file) {
-            if(app.customer.prizes) {
-                console.log(app.customer.prizes)
-                // check if quantity exceeded
-                app.customer.prizes.forEach((prize) => {
-                    let total_given_coupons = 0;
-                    if(!prize.coupons) prize.coupons = {}
-                    Object.values(prize.coupons).forEach((coupon) => {
-                        if(coupon.coupon && coupon.selected_quantity) {
-                            total_given_coupons += JSON.parse(coupon.coupon).coupon * coupon.selected_quantity;
-                        }
-                    })
-
-                    if(total_given_coupons > prize.quantity) {
-                        app.redeemErrorMsg = 'Coupon value exceeded. Please check.'
+        if(app.customer.prizes) {
+            console.log(app.customer.prizes)
+            // check if quantity exceeded
+            app.customer.prizes.forEach((prize) => {
+                let total_given_coupons = 0;
+                if(!prize.coupons) prize.coupons = {}
+                Object.values(prize.coupons).forEach((coupon) => {
+                    if(coupon.coupon && coupon.selected_quantity) {
+                        total_given_coupons += JSON.parse(coupon.coupon).coupon * coupon.selected_quantity;
                     }
                 })
 
-                if(!app.redeemErrorMsg) {
-                    // filter empty data
-                    let prizes = app.customer.prizes.filter((prize) => {
-                        return prize.coupons;
-                    })
+                if(total_given_coupons > prize.quantity) {
+                    app.redeemErrorMsg = 'Coupon value exceeded. Please check.'
+                }
+            })
 
-                    prizes.forEach((prize) => {
-                        let allCoupons = {};
+            if(!app.redeemErrorMsg) {
+                // filter empty data
+                let prizes = app.customer.prizes.filter((prize) => {
+                    return prize.coupons;
+                })
 
-                        Object.values(prize.coupons || {}).forEach((coupon) => {
-                            couponData = JSON.parse(coupon.coupon);
-                            if(couponData && coupon.selected_quantity) {
-                                if(allCoupons[couponData._id]) {
-                                    allCoupons[couponData._id].selected_quantity  += coupon.selected_quantity;
-                                } else {
-                                    allCoupons[couponData._id] = {
-                                        selected_quantity  : coupon.selected_quantity,
-                                        couponId  : couponData._id,
-                                        coupon  : couponData.name,
-                                        cost : couponData.coupon
-                                    }
+                prizes.forEach((prize) => {
+                    let allCoupons = {};
+
+                    Object.values(prize.coupons || {}).forEach((coupon) => {
+                        couponData = JSON.parse(coupon.coupon);
+                        if(couponData && coupon.selected_quantity) {
+                            if(allCoupons[couponData._id]) {
+                                allCoupons[couponData._id].selected_quantity  += coupon.selected_quantity;
+                            } else {
+                                allCoupons[couponData._id] = {
+                                    selected_quantity  : coupon.selected_quantity,
+                                    couponId  : couponData._id,
+                                    coupon  : couponData.name,
+                                    cost : couponData.coupon
                                 }
                             }
-                        })
-                        prize.coupons = Object.values(allCoupons);
-                    })
-
-                    // filter empty data
-                    prizes = app.customer.prizes.filter((prize) => {
-                        return prize.coupons.length > 0;
-                    })
-
-                    uploadFile.uploadImage(app.file).then(function (data) {
-                        if(data.data.success) {
-                            user.redeem({
-                                'prizes' : prizes,
-                                'customerId' : app.customer._id,
-                                'signature' : data.data.filename
-                            }).then((data) => {
-                                app.successMsg = 'Coupon redeem request created.'
-                            }).catch((error) => {
-                                app.redeemErrorMsg = 'Something went wrong, refresh and please try again later.'
-                            })
-                        } else {
-                            app.redeemErrorMsg = data.data.message;
                         }
-                    });
-                }
-            } else {
-                app.redeemErrorMsg = 'Please select coupon.'
+                    })
+                    prize.coupons = Object.values(allCoupons);
+                })
+
+                // filter empty data
+                prizes = app.customer.prizes.filter((prize) => {
+                    return prize.coupons.length > 0;
+                })
+
+                user.redeem({
+                    'prizes' : prizes,
+                    'customerId' : app.customer._id,
+                }).then((data) => {
+                    app.successMsg = 'Coupon redeem request created.'
+                }).catch((error) => {
+                    app.redeemErrorMsg = 'Something went wrong, refresh and please try again later.'
+                })
+
+                // uploadFile.uploadImage(app.file).then(function (data) {
+                //     if(data.data.success) {
+                //         user.redeem({
+                //             'prizes' : prizes,
+                //             'customerId' : app.customer._id,
+                //             'signature' : data.data.filename
+                //         }).then((data) => {
+                //             app.successMsg = 'Coupon redeem request created.'
+                //         }).catch((error) => {
+                //             app.redeemErrorMsg = 'Something went wrong, refresh and please try again later.'
+                //         })
+                //     } else {
+                //         app.redeemErrorMsg = data.data.message;
+                //     }
+                // });
             }
         } else {
-            app.redeemErrorMsg = 'Please upload signature.'
+            app.redeemErrorMsg = 'Please select coupon.'
         }
     }
 })
